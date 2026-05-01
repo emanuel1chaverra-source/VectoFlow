@@ -1,0 +1,3 @@
+# Objetivo general
+
+Desarrollar una plataforma web educativa e interactiva denominada VectoFlow, que permita a los estudiantes de ingeniería de sistemas de primer y segundo semestre de universidades públicas de Medellín, comprender, practicar y visualizar paso a paso la operación de suma de vectores (C[i] = A[i] + B[i]), fortaleciendo el pensamiento computacional y reduciendo la brecha entre la teoría y la práctica en programación.

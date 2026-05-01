@@ -1,0 +1,111 @@
+/* CARD */
+.card {
+    width: 350px;
+    margin: 60px auto;
+    padding: 30px;
+    background: var(--color-card);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.card h2 {
+    margin-bottom: 20px;
+}
+
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
+
+/* BOTÓN */
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: var(--color-primario);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: var(--color-secundario);
+}
+
+/* PASSWORD */
+.password-box {
+    position: relative;
+}
+
+.ver {
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    cursor: pointer;
+}
+
+/* RECORDARME */
+.opciones {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.opciones label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* LINKS */
+.link {
+    display: block;
+    margin-top: 15px;
+    color: var(--color-primario);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+/* REGISTRO */
+.registro {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.registro a {
+    color: var(--color-primario);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.registro a:hover {
+    text-decoration: underline;
+}
+
+/* TEXTO Y MENSAJES */
+.texto {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.mensaje {
+    margin-top: 10px;
+    font-weight: bold;
+}
