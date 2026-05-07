@@ -9,32 +9,43 @@ function mostrarError(texto) {
     el.style.display = 'block';
 }
 
-function login() {
+async function login() {
     const correo = document.getElementById('correo').value.trim();
     const pass = document.getElementById('password').value;
     const msgEl = document.getElementById('msg-error');
     msgEl.style.display = 'none';
 
-    const data = localStorage.getItem('usuario');
-    if (!data) {
-        mostrarError('No hay usuarios registrados. Crea una cuenta primero.');
+    if (!correo || !pass) {
+        mostrarError('Todos los campos son obligatorios.');
         return;
     }
 
-    const usuario = JSON.parse(data);
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ correo, contraseña: pass })
+        });
 
-    if (correo === usuario.correo && pass === usuario.password) {
-        // Guardar sesión activa
-        localStorage.setItem('sesion', JSON.stringify({ usuario: usuario.usuario, rol: usuario.rol }));
+        const data = await res.json();
+
+        if (!res.ok) {
+            mostrarError(data.error || 'Error al iniciar sesión.');
+            return;
+        }
+
+        // Guardar token y sesión
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('sesion', JSON.stringify(data.usuario));
 
         // Redirigir según rol
-        if (usuario.rol === 'docente') {
+        if (data.usuario.rol === 3) {
             window.location.href = 'dashboard-docente.html';
         } else {
-            // estudiante (o cualquier otro rol)
             window.location.href = 'dashboard-estudiante.html';
         }
-    } else {
-        mostrarError('Correo o contraseña incorrectos. Intenta de nuevo.');
+
+    } catch (err) {
+        mostrarError('No se pudo conectar con el servidor.');
     }
 }

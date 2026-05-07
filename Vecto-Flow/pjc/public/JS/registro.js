@@ -1,7 +1,5 @@
 function seleccionarRol(rol, chip) {
-    // Quitar activo de todos
     document.querySelectorAll('.rol-chip').forEach(c => c.classList.remove('activo'));
-    // Activar el seleccionado
     chip.classList.add('activo');
     document.getElementById('rol').value = rol;
 }
@@ -20,30 +18,46 @@ function mostrarMsg(tipo, texto) {
     if (tipo === 'exito') { ok.innerText = texto; ok.style.display = 'block'; }
 }
 
-function registrar() {
-    const user = document.getElementById('usuario').value.trim();
+async function registrar() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
     const correo = document.getElementById('correo').value.trim();
     const pass = document.getElementById('password').value;
     const rol = document.getElementById('rol').value;
 
-    if (!user || !correo || !pass) {
+    if (!nombre || !apellido || !correo || !pass) {
         mostrarMsg('error', 'Todos los campos son obligatorios.');
         return;
     }
-
     if (pass.length < 6) {
         mostrarMsg('error', 'La contraseña debe tener al menos 6 caracteres.');
         return;
     }
-
     if (!rol) {
         mostrarMsg('error', 'Selecciona tu rol: Estudiante o Docente.');
         return;
     }
 
-    const usuario = { usuario: user, correo: correo, password: pass, rol: rol };
-    localStorage.setItem('usuario', JSON.stringify(usuario));
+    const fkRol = rol === 'docente' ? 3 : 2;
 
-    mostrarMsg('exito', '¡Cuenta creada! Redirigiendo al login...');
-    setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+    try {
+        const res = await fetch('http://localhost:3000/api/auth/registro', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, apellido, correo, contraseña: pass, fkRol })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            mostrarMsg('error', data.error || 'Error al registrar.');
+            return;
+        }
+
+        mostrarMsg('exito', '¡Cuenta creada! Redirigiendo al login...');
+        setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+
+    } catch (err) {
+        mostrarMsg('error', 'No se pudo conectar con el servidor.');
+    }
 }
