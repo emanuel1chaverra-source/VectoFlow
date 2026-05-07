@@ -197,5 +197,5 @@ function guardarYContinuar() {
 
     // Guardar en localStorage y redirigir
     localStorage.setItem('vectores_activos', JSON.stringify(vectores));
-    window.location.href = 'ejecutar-suma.html';
+    window.location.href = '../PAGE/Ejecutarsuma.html';
 }

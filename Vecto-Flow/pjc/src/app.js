@@ -1,11 +1,15 @@
-const express=require('express');
-const app=express();
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
+const app = express();
+
+app.use(cors());
 app.use(express.json());
-app.use('/api/tareas',require('./routes/tareaRoutes'));
-app.use('/api/tipos-tarea',require('./routes/tipoTareaRoutes'));
-app.use('/api/etiquetas',require('./routes/etiquetaRoutes'));
-app.use('/api/niveles',require('./routes/nivelRoutes'));
-app.use('/api/estudiantes',require('./routes/estudianteRoutes'));
-app.use('/api/notificaciones',require('./routes/notificacionRoutes'));
-app.get('/',(req,res)=>res.json({mensaje:'API funcionando ✅'}));
-module.exports=app;
+app.use(express.static('public'));
+
+app.get('/api', (req, res) => {
+    res.json({ mensaje: '✅ API VectoFlow funcionando' });
+});
+
+module.exports = app;

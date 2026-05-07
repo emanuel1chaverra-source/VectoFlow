@@ -31,13 +31,13 @@ CREATE TABLE USUARIOS (
 
 -- Tabla 4: SESIONES
 CREATE TABLE SESIONES (
-    PKSesion     INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    FechaInicio  DATETIME      NOT NULL,
+    PKSesion     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    FechaInicio  DATETIME NOT NULL,
     FechaFin     DATETIME,
     IPAcceso     VARCHAR(45),
     Dispositivo  VARCHAR(100),
-    Estado       TINYINT(1)    NOT NULL DEFAULT 1,
-    FKUsuario    INT           NOT NULL,
+    Estado       TINYINT(1) NOT NULL DEFAULT 1,
+    FKUsuario    INT NOT NULL,
     FOREIGN KEY (FKUsuario) REFERENCES USUARIOS(PKUsuario) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
