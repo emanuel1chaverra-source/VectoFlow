@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paso a Paso — VectoFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        /* ===== ESCENARIO PRINCIPAL ===== */
+        .escenario {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 32px 28px;
+            margin-bottom: 20px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .escenario::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 60%),
+                        radial-gradient(ellipse at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* ===== FILA DE VECTORES ===== */
+        .fila-vectores {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .grupo-vector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .etiqueta-vector {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .fila-celdas {
+            display: flex;
+            gap: 6px;
+        }
+
+        .celda-paso {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            border: 2px solid;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        /* Colores normales */
+        .celda-a {
+            border-color: rgba(99, 102, 241, 0.4);
+            background: rgba(99, 102, 241, 0.08);
+            color: #a5b4fc;
+        }
+
+        .celda-b {
+            border-color: rgba(6, 182, 212, 0.4);
+            background: rgba(6, 182, 212, 0.08);
+            color: #67e8f9;
+        }
+
+        .celda-extra {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.08);
+            color: #fcd34d;
+        }
+
+        .celda-c {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.08);
+            color: #6ee7b7;
+        }
+
+        /* CELDA ACTIVA (resaltada) */
+        .celda-activa-a {
+            border-color: #818cf8 !important;
+            background: rgba(99, 102, 241, 0.25) !important;
+            color: #fff !important;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .celda-activa-b {
+            border-color: #22d3ee !important;
+            background: rgba(6, 182, 212, 0.25) !important;
+            color: #fff !important;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .celda-activa-extra {
+            border-color: #fbbf24 !important;
+            background: rgba(245, 158, 11, 0.25) !important;
+            color: #fff !important;
+            transform: scale(1.15);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+        }
+
+        .celda-activa-c {
+            border-color: #34d399 !important;
+            background: rgba(16, 185, 129, 0.3) !important;
+            color: #fff !important;
+            transform: scale(1.2);
+            box-shadow: 0 0 24px rgba(16, 185, 129, 0.6);
+        }
+
+        /* CELDA COMPLETADA */
+        .celda-completa {
+            opacity: 0.5;
+        }
+
+        .celda-c.celda-resuelta {
+            border-color: rgba(16, 185, 129, 0.7) !important;
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: #6ee7b7 !important;
+            opacity: 1;
+        }
+
+        /* ===== OPERACIÓN ACTUAL ===== */
+        .operacion-display {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px 28px;
+            text-align: center;
+            min-width: 300px;
+        }
+
+        .operacion-indice {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .operacion-ecuacion {
+            font-family: 'Space Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            letter-spacing: 1px;
+            min-height: 32px;
+            transition: opacity 0.2s;
+        }
+
+        .op-a { color: #a5b4fc; }
+        .op-b { color: #67e8f9; }
+        .op-c { color: #6ee7b7; }
+        .op-num { color: white; }
+
+        /* ===== PROGRESO ===== */
+        .barra-progreso-wrapper {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .barra-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: rgba(255,255,255,0.4);
+            font-family: 'Space Mono', monospace;
+            margin-bottom: 6px;
+        }
+
+        .barra-progreso {
+            height: 4px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .barra-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
+            border-radius: 4px;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* ===== CONTROLES ===== */
+        .controles {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .ctrl-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--color-borde);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all var(--transicion);
+            color: var(--color-texto);
+        }
+
+        .ctrl-btn:hover:not(:disabled) {
+            border-color: var(--color-primario);
+            color: var(--color-primario);
+            transform: scale(1.05);
+        }
+
+        .ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .ctrl-btn-play {
+            width: 56px;
+            height: 56px;
+            background: var(--color-primario);
+            border-color: var(--color-primario);
+            color: white;
+            font-size: 20px;
+        }
+
+        .ctrl-btn-play:hover:not(:disabled) {
+            background: var(--color-secundario);
+            border-color: var(--color-secundario);
+            color: white;
+            box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+        }
+
+        .velocidad-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--color-texto-suave);
+        }
+
+        .velocidad-control select {
+            padding: 6px 10px;
+            border: 1.5px solid var(--color-borde);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+        }
+
+        /* ===== PANEL ESTADO ===== */
+        .estado-chip {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .estado-espera { background: #f1f5f9; color: var(--color-texto-suave); }
+        .estado-corriendo { background: rgba(79, 70, 229, 0.1); color: var(--color-primario); }
+        .estado-pausado { background: rgba(245, 158, 11, 0.1); color: #b45309; }
+        .estado-completo { background: rgba(16, 185, 129, 0.1); color: #065f46; }
+
+        /* ===== MENSAJE FINAL ===== */
+        .mensaje-final {
+            display: none;
+            text-align: center;
+            padding: 16px;
+        }
+
+        .mensaje-final.visible { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .acciones-post {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
+    <nav class="menu">
+        <a href="ejecutar-suma.html">← Volver a suma</a>
+        <a href="paso-a-paso.html" class="activo">👁 Paso a paso</a>
+        <a href="historial.html">📋 Historial</a>
+    </nav>
+    <div class="user-info">
+        <div class="avatar" id="avatar-inicial">E</div>
+        <div>
+            <div class="nombre-usuario" id="nombre-display">Estudiante</div>
+            <span class="rol-badge estudiante">Estudiante</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+</header>
+
+<main>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2 class="panel-titulo">👁 Visualización Paso a Paso</h2>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span class="estado-chip estado-espera" id="estado-chip">En espera</span>
+                <span id="paso-contador" style="font-size:13px; color:var(--color-texto-suave); font-family:'Space Mono',monospace;"></span>
+            </div>
+        </div>
+
+        <p style="font-size:13px; color:var(--color-texto-suave); margin-bottom:20px;">
+            Observa cómo se calcula <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">C[i] = A[i] + B[i]</code> posición por posición. Usa los controles para avanzar, retroceder o pausar.
+        </p>
+
+        <!-- ESCENARIO ANIMADO -->
+        <div class="escenario" id="escenario">
+            <div class="fila-vectores" id="fila-vectores"></div>
+            <div class="operacion-display" id="operacion-display">
+                <div class="operacion-indice" id="op-indice">—</div>
+                <div class="operacion-ecuacion" id="op-ecuacion">Presiona ▶ para comenzar</div>
+            </div>
+            <div class="barra-progreso-wrapper">
+                <div class="barra-label">
+                    <span id="barra-label-izq">Índice 0</span>
+                    <span id="barra-label-der">— / —</span>
+                </div>
+                <div class="barra-progreso">
+                    <div class="barra-fill" id="barra-fill"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROLES -->
+        <div class="controles" style="margin-bottom: 20px;">
+            <button class="ctrl-btn" id="btn-retroceder" onclick="retroceder()" title="Retroceder" disabled>⏮</button>
+            <button class="ctrl-btn ctrl-btn-play" id="btn-play" onclick="togglePlay()" title="Reproducir / Pausar">▶</button>
+            <button class="ctrl-btn" id="btn-avanzar" onclick="avanzar()" title="Avanzar" disabled>⏭</button>
+            <button class="ctrl-btn" id="btn-reiniciar" onclick="reiniciarAnimacion()" title="Reiniciar">↺</button>
+
+            <div class="velocidad-control">
+                <span>Velocidad:</span>
+                <select id="velocidad-select" onchange="cambiarVelocidad()">
+                    <option value="1500">🐢 Lento</option>
+                    <option value="900" selected>⚡ Normal</option>
+                    <option value="400">🚀 Rápido</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- MENSAJE FINAL -->
+        <div class="mensaje-final" id="mensaje-final">
+            <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
+            <h3 style="font-family:'Space Mono',monospace; color: var(--color-exito); margin-bottom: 6px;">¡Suma completada!</h3>
+            <p style="font-size:13px; color:var(--color-texto-suave);">Has visualizado la operación completa posición por posición.</p>
+            <div class="acciones-post">
+                <button class="btn btn-primario" onclick="reiniciarAnimacion()">↺ Ver de nuevo</button>
+                <a href="tabla-comparativa.html" class="btn btn-secundario">📊 Ver tabla comparativa</a>
+                <a href="ejecutar-suma.html" class="btn btn-secundario">← Volver a suma</a>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>VectoFlow © 2025</footer>
+
+<script src="../js/dashboard.js"></script>
+<script src="../js/paso-a-paso.js"></script>
+</body>
+</html>

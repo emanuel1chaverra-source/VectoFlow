@@ -2,29 +2,62 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro — VectoFlow</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
 
-    <div class="logo">VectoFlow</div>
+    <div class="logo">Vecto<span>Flow</span></div>
 
     <div class="card">
-        <h2>Crear Usuario</h2>
+        <h2>Crear cuenta</h2>
+        <p class="subtitulo">Ingresa tus datos para registrarte</p>
 
-        <input type="text" id="usuario" placeholder="Usuario">
-        <input type="email" id="correo" placeholder="Correo">
-        <input type="password" id="password" placeholder="Contraseña">
+        <div class="grupo">
+            <label>Nombre de usuario</label>
+            <input type="text" id="usuario" placeholder="ej. juan.perez">
+        </div>
 
-        <button onclick="registrar()">Registrarse</button>
-        
+        <div class="grupo">
+            <label>Correo electrónico</label>
+            <input type="email" id="correo" placeholder="correo@ejemplo.com">
+        </div>
 
+        <div class="grupo">
+            <label>Contraseña</label>
+            <div class="password-box">
+                <input type="password" id="password" placeholder="Mínimo 6 caracteres">
+                <span class="ver" onclick="togglePassword()">👁</span>
+            </div>
+        </div>
 
+        <div class="grupo">
+            <label>¿Cuál es tu rol?</label>
+            <div class="rol-opciones">
+                <div class="rol-chip" onclick="seleccionarRol('estudiante', this)">
+                    <span class="emoji">🎓</span>
+                    Estudiante
+                </div>
+                <div class="rol-chip" onclick="seleccionarRol('docente', this)">
+                    <span class="emoji">📋</span>
+                    Docente
+                </div>
+            </div>
+            <input type="hidden" id="rol" value="">
+        </div>
 
-        <a href="login.html" class="link">Volver al login</a>
+        <div id="msg-error" class="msg-error"></div>
+        <div id="msg-exito" class="msg-exito"></div>
+
+        <button class="btn-primario" onclick="registrar()">Crear cuenta</button>
+
+        <div class="registro">
+            ¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a>
+        </div>
     </div>
-        <script src="../js/registro.js"></script>
+
+    <script src="../js/registro.js"></script>
 </body>
 </html>

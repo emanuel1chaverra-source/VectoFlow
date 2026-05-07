@@ -2,80 +2,64 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Estudiante — VectoFlow</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
-
-    <title>Dashboard</title>
 </head>
 <body>
 
-    <header class="navbar">
-
-    <div class="logo-nav">VectoFlow</div>
-
+<header class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
     <nav class="menu">
-        <a href="#">Ingresar Vectores</a>
-        <a href="#">Mis Métricas</a>
-        <a href="#">Perfil</a>
-
-        <div class="user">
-            <div class="avatar"></div>
-            <button onclick="logout()">Cerrar sesión</button>
-        </div>
+        <a href="../PAGE/Ingresarvectores.html">➕ Nueva Suma</a>
+        <a href="historial.html">📋 Historial</a>
+        <a href="resumen-sesion.html">📊 Mis Métricas</a>
     </nav>
-
+    <div class="user-info">
+        <div class="avatar" id="avatar-inicial">E</div>
+        <div>
+            <div class="nombre-usuario" id="nombre-display">Estudiante</div>
+            <span class="rol-badge estudiante">Estudiante</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
 </header>
 
-    <main>
+<main>
 
-        <div class="bienvenida">
-            <h2>Bienvenido, Estudiante</h2>
-            <p>¿Qué deseas practicar hoy?</p>
-        </div>
-
-       <div class="cards">
-
-    <div class="card-box">
-        <div class="icono"></div>
-        <p>Ingresar Vectores</p>
-
-        <div class="linea"></div>
-        <div class="linea"></div>
-        <div class="linea corta"></div>
-
-        <button>Ir</button>
+    <div class="bienvenida">
+        <h2>¡Bienvenido, <span id="bienvenida-nombre">Estudiante</span>! 👋</h2>
+        <p>¿Qué deseas practicar hoy?</p>
     </div>
 
-    <div class="card-box">
-        <div class="icono"></div>
-        <p>Mis Métricas</p>
-
-        <div class="linea"></div>
-        <div class="linea"></div>
-        <div class="linea corta"></div>
-
-        <button>Ir</button>
+    <div class="cards">
+        <a href="ingresar-vectores.html" class="card-modulo">
+            <span class="icono-modulo">➕</span>
+            <h3>Nueva Suma</h3>
+            <p>Ingresa vectores y ejecuta la operación C[i] = A[i] + B[i]</p>
+        </a>
+        <a href="historial.html" class="card-modulo">
+            <span class="icono-modulo">📋</span>
+            <h3>Mi Historial</h3>
+            <p>Consulta todas tus operaciones anteriores con sus resultados</p>
+        </a>
+        <a href="resumen-sesion.html" class="card-modulo">
+            <span class="icono-modulo">📊</span>
+            <h3>Mis Métricas</h3>
+            <p>Ve tu resumen de sesión, intentos y aciertos</p>
+        </a>
+        <a href="#" class="card-modulo">
+            <span class="icono-modulo">👤</span>
+            <h3>Mi Perfil</h3>
+            <p>Cambia tu contraseña y datos de tu cuenta</p>
+        </a>
     </div>
 
-    <div class="card-box">
-        <div class="icono"></div>
-        <p>Perfil / Cambiar Contraseña</p>
+</main>
 
-        <div class="linea"></div>
-        <div class="linea"></div>
-        <div class="linea corta"></div>
+<footer>VectoFlow © 2025 — Plataforma educativa para la suma de vectores</footer>
 
-        <button>Ir</button>
-    </div>
-
-</div>
-
-    </main>
-
-    <script src="../js/dashboard.js"></script>
-    <footer>
-    VectoFlow © 2025
-</footer>
+<script src="../JS/dashboard.js"></script>
 </body>
 </html>

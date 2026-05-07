@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejecutar Suma — VectoFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        .vectores-preview {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .vector-card {
+            background: white;
+            border: 2px solid var(--color-borde);
+            border-radius: 12px;
+            padding: 16px 18px;
+            min-width: 140px;
+        }
+
+        .vector-card.vec-a { border-color: rgba(79, 70, 229, 0.4); }
+        .vector-card.vec-b { border-color: rgba(6, 182, 212, 0.4); }
+        .vector-card.vec-c { border-color: rgba(16, 185, 129, 0.4); }
+        .vector-card.vec-extra { border-color: rgba(245, 158, 11, 0.4); }
+
+        .vector-card-titulo {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .vec-a .vector-card-titulo { color: var(--color-vector-a); }
+        .vec-b .vector-card-titulo { color: var(--color-vector-b); }
+        .vec-c .vector-card-titulo { color: var(--color-vector-c); }
+        .vec-extra .vector-card-titulo { color: var(--color-advertencia); }
+
+        .vector-celdas-display {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .celda-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .celda-display .idx {
+            font-size: 9px;
+            color: var(--color-texto-suave);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .celda-display .val {
+            width: 46px;
+            height: 38px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+        .vec-a .val { border-color: rgba(79, 70, 229, 0.3); color: var(--color-vector-a); background: rgba(79, 70, 229, 0.06); }
+        .vec-b .val { border-color: rgba(6, 182, 212, 0.3); color: var(--color-vector-b); background: rgba(6, 182, 212, 0.06); }
+        .vec-c .val { border-color: rgba(16, 185, 129, 0.3); color: var(--color-vector-c); background: rgba(16, 185, 129, 0.08); }
+        .vec-extra .val { border-color: rgba(245, 158, 11, 0.3); color: var(--color-advertencia); background: rgba(245, 158, 11, 0.06); }
+
+        .operacion-simbolo {
+            font-size: 28px;
+            color: var(--color-texto-suave);
+            align-self: center;
+            font-weight: 300;
+            padding-top: 8px;
+        }
+
+        .resultado-bloque {
+            display: none;
+            margin-top: 24px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .resultado-bloque.visible { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .resultado-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .badge-exito {
+            background: var(--color-exito);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .acciones-resultado {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-borde);
+        }
+
+        .alerta-box {
+            display: none;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            margin-top: 16px;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alerta-box.visible { display: flex; }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
+    <nav class="menu">
+        <a href="ingresar-vectores.html">← Editar vectores</a>
+        <a href="ejecutar-suma.html" class="activo">🔢 Ejecutar Suma</a>
+        <a href="historial.html">📋 Historial</a>
+    </nav>
+    <div class="user-info">
+        <div class="avatar" id="avatar-inicial">E</div>
+        <div>
+            <div class="nombre-usuario" id="nombre-display">Estudiante</div>
+            <span class="rol-badge estudiante">Estudiante</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+</header>
+
+<main>
+
+    <div class="panel">
+        <div class="panel-header">
+            <h2 class="panel-titulo">🔢 Panel de Ejecución de Suma</h2>
+            <a href="ingresar-vectores.html" class="btn btn-secundario" style="font-size:13px; padding:8px 14px;">✏️ Editar vectores</a>
+        </div>
+
+        <p style="font-size:13px; color:var(--color-texto-suave); margin-bottom:20px;">
+            Verifica los vectores ingresados y ejecuta la operación <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">C[i] = A[i] + B[i]</code>
+        </p>
+
+        <!-- PREVIEW VECTORES -->
+        <div class="vectores-preview" id="vectores-preview">
+            <p style="color:var(--color-texto-suave); font-size:13px;">Cargando vectores...</p>
+        </div>
+
+        <!-- ALERTA ERROR -->
+        <div class="alerta-box" id="alerta-error">
+            ❌ <span id="alerta-texto">Error</span>
+        </div>
+
+        <!-- BOTÓN EJECUTAR -->
+        <button class="btn btn-exito" id="btn-ejecutar" onclick="ejecutarSuma()" style="margin-top:8px; padding:13px 28px; font-size:15px;">
+            ▶ Ejecutar Suma
+        </button>
+
+        <!-- RESULTADO -->
+        <div class="resultado-bloque" id="resultado-bloque">
+            <div class="resultado-header">
+                <h3 style="font-family:'Space Mono',monospace; font-size:16px;">Vector Resultado C</h3>
+                <span class="badge-exito">✓ Suma completada</span>
+            </div>
+
+            <div class="vectores-preview">
+                <div class="vector-card vec-c" id="resultado-card">
+                    <div class="vector-card-titulo">Vector C (Resultado)</div>
+                    <div class="vector-celdas-display" id="resultado-celdas"></div>
+                </div>
+            </div>
+
+            <!-- TABLA COMPARATIVA RÁPIDA -->
+            <div class="tabla-wrapper" id="tabla-resultado" style="margin-top:16px;"></div>
+
+            <div class="acciones-resultado">
+                <button class="btn btn-primario" onclick="verPasoAPaso()">👁 Ver paso a paso</button>
+                <button class="btn btn-secundario" onclick="verTablaCompleta()">📊 Ver tabla comparativa</button>
+                <button class="btn btn-secundario" onclick="guardarEnHistorial()">💾 Guardar en historial</button>
+                <a href="ingresar-vectores.html" class="btn btn-peligro">🔄 Nueva operación</a>
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>VectoFlow © 2025</footer>
+
+<script src="../js/dashboard.js"></script>
+<script src="../js/suma.js"></script>
+</body>
+</html>
