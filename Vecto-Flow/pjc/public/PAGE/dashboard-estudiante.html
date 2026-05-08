@@ -1,54 +1,88 @@
 <!DOCTYPE html>
+<!--
+ * dashboard-estudiante.html — Panel principal del usuario Estudiante
+ * -------------------------------------------------------------------
+ * Página de inicio del estudiante tras iniciar sesión.
+ * Muestra la navbar con sus datos, un saludo personalizado y
+ * cuatro cards de acceso rápido a las funcionalidades del rol.
+ * Es la versión simplificada del dashboard (sin ejercicios ni
+ * monitoreo), enfocada en practicar y revisar el propio progreso.
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- Hace la página responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Estudiante — VectoFlow</title>
+    <!-- Estilos globales de la app -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Estilos específicos del dashboard -->
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
+<!-- ── BARRA DE NAVEGACIÓN SUPERIOR ────────────────────────────
+     Contiene el logo, links de navegación del estudiante y
+     la info del usuario. dashboard.js rellena el nombre,
+     avatar e inicial dinámicamente. -->
 <header class="navbar">
+    <!-- Logo de la aplicación -->
     <div class="logo-nav">Vecto<span>Flow</span></div>
+
+    <!-- Links de navegación principales del estudiante -->
     <nav class="menu">
         <a href="../PAGE/Ingresarvectores.html">➕ Nueva Suma</a>
         <a href="historial.html">📋 Historial</a>
         <a href="resumen-sesion.html">📊 Mis Métricas</a>
     </nav>
+
+    <!-- Info del usuario: avatar, nombre, rol y botón de logout -->
     <div class="user-info">
+        <!-- Avatar circular con la inicial del nombre (llenado por dashboard.js) -->
         <div class="avatar" id="avatar-inicial">E</div>
         <div>
+            <!-- Nombre del estudiante logueado (llenado por dashboard.js) -->
             <div class="nombre-usuario" id="nombre-display">Estudiante</div>
             <span class="rol-badge estudiante">Estudiante</span>
         </div>
+        <!-- Llama a logout() de dashboard.js para cerrar sesión -->
         <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
     </div>
 </header>
 
 <main>
 
+    <!-- ── MENSAJE DE BIENVENIDA ────────────────────────────────
+         El span #bienvenida-nombre es rellenado por dashboard.js
+         con el nombre del estudiante autenticado. -->
     <div class="bienvenida">
         <h2>¡Bienvenido, <span id="bienvenida-nombre">Estudiante</span>! 👋</h2>
         <p>¿Qué deseas practicar hoy?</p>
     </div>
 
+    <!-- ── CARDS DE ACCESO RÁPIDO ───────────────────────────────
+         Cuatro módulos del rol estudiante.
+         Cada card es un enlace a su página correspondiente. -->
     <div class="cards">
+        <!-- Card: Ingresar vectores y ejecutar la suma C[i] = A[i] + B[i] -->
         <a href="../PAGE/Ingresarvectores.html" class="card-modulo">
             <span class="icono-modulo">➕</span>
             <h3>Nueva Suma</h3>
             <p>Ingresa vectores y ejecuta la operación C[i] = A[i] + B[i]</p>
         </a>
+        <!-- Card: Consultar operaciones pasadas con sus resultados -->
         <a href="../PAGE/Historial.html" class="card-modulo">
             <span class="icono-modulo">📋</span>
             <h3>Mi Historial</h3>
             <p>Consulta todas tus operaciones anteriores con sus resultados</p>
         </a>
+        <!-- Card: Ver resumen de sesión, intentos y aciertos -->
         <a href="../PAGE/Resumen-sesion.html" class="card-modulo">
             <span class="icono-modulo">📊</span>
             <h3>Mis Métricas</h3>
             <p>Ve tu resumen de sesión, intentos y aciertos</p>
         </a>
+        <!-- Card: Perfil de usuario (funcionalidad pendiente) -->
         <a href="#" class="card-modulo">
             <span class="icono-modulo">👤</span>
             <h3>Mi Perfil</h3>
@@ -60,6 +94,7 @@
 
 <footer>VectoFlow © 2025 — Plataforma educativa para la suma de vectores</footer>
 
+<!-- dashboard.js: rellena nombre, avatar e inicial; provee logout() -->
 <script src="../JS/dashboard.js"></script>
 </body>
 </html>

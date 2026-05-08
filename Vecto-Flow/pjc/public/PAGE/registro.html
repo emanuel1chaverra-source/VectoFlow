@@ -1,68 +1,131 @@
 <!DOCTYPE html>
+<!-- Documento HTML5 en español -->
 <html lang="es">
 <head>
+    <!-- Codificación UTF-8 para soporte de tildes y caracteres especiales -->
     <meta charset="UTF-8">
+    <!-- Viewport responsivo: escala correctamente en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
     <title>Registro — VectoFlow</title>
+
+    <!-- Hoja de estilos global con variables CSS (colores, fuentes, sombras, fondo) -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Hoja de estilos del login/registro: card, inputs, chips de rol, botón -->
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
 
+    <!-- Logo de la aplicación centrado en la parte superior.
+         "Vecto" en color primario (morado), "Flow" en color acento (cyan).
+         Estilizado por la clase .logo definida en style.css. -->
     <div class="logo">Vecto<span>Flow</span></div>
 
+    <!-- ====
+         CARD — Tarjeta central que contiene el formulario de registro
+    ==== -->
     <div class="card">
+
+        <!-- Título principal del formulario -->
         <h2>Crear cuenta</h2>
+        <!-- Subtítulo de instrucción debajo del título -->
         <p class="subtitulo">Ingresa tus datos para registrarte</p>
 
+        <!-- ====
+             CAMPO: NOMBRE
+        ==== -->
         <div class="grupo">
             <label>Nombre</label>
+            <!-- Input de texto para el nombre del usuario.
+                 El JS lee este valor con document.getElementById('nombre').value -->
             <input type="text" id="nombre" placeholder="ej. Juan">
         </div>
 
+        <!-- ====
+             CAMPO: APELLIDO
+        ==== -->
         <div class="grupo">
             <label>Apellido</label>
+            <!-- Input de texto para el apellido del usuario -->
             <input type="text" id="apellido" placeholder="ej. Pérez">
         </div>
 
+        <!-- ====
+             CAMPO: CORREO ELECTRÓNICO
+        ==== -->
         <div class="grupo">
             <label>Correo electrónico</label>
+            <!-- Input de tipo email: el navegador valida el formato automáticamente -->
             <input type="email" id="correo" placeholder="correo@ejemplo.com">
         </div>
 
+        <!-- ====
+             CAMPO: CONTRASEÑA con botón para mostrar/ocultar
+        ==== -->
         <div class="grupo">
             <label>Contraseña</label>
+            <!-- Contenedor relativo para posicionar el ícono del ojo dentro del input -->
             <div class="password-box">
+                <!-- Input de contraseña con mínimo de 6 caracteres (validado por el JS) -->
                 <input type="password" id="password" placeholder="Mínimo 6 caracteres">
+                <!-- Ícono del ojo: al hacer clic llama a togglePassword() en registro.js
+                     para alternar entre type="password" y type="text" -->
                 <span class="ver" onclick="togglePassword()">👁</span>
             </div>
         </div>
 
+        <!-- ====
+             CAMPO: ROL — Selector visual de rol mediante chips interactivos
+        ==== -->
         <div class="grupo">
             <label>¿Cuál es tu rol?</label>
+
+            <!-- Contenedor de los dos chips de rol (Estudiante y Docente).
+                 Distribuidos en fila con igual ancho gracias a flex: 1 en login.css. -->
             <div class="rol-opciones">
+
+                <!-- Chip de Estudiante: al hacer clic llama a seleccionarRol('estudiante', this)
+                     en registro.js que agrega la clase .activo a este chip y guarda el valor
+                     en el input hidden #rol. -->
                 <div class="rol-chip" onclick="seleccionarRol('estudiante', this)">
                     <span class="emoji">🎓</span>
                     Estudiante
                 </div>
+
+                <!-- Chip de Docente: mismo comportamiento que el chip de Estudiante. -->
                 <div class="rol-chip" onclick="seleccionarRol('docente', this)">
                     <span class="emoji">📋</span>
                     Docente
                 </div>
             </div>
+
+            <!-- Input oculto que almacena el rol seleccionado ('estudiante' o 'docente').
+                 El JS lo lee al enviar el formulario para incluirlo en el body del fetch. -->
             <input type="hidden" id="rol" value="">
         </div>
 
+        <!-- Contenedor de mensajes de error (ej: "Todos los campos son obligatorios").
+             El JS lo muestra/oculta dinámicamente según las validaciones. -->
         <div id="msg-error" class="msg-error"></div>
+
+        <!-- Contenedor de mensajes de éxito (ej: "¡Cuenta creada! Redirigiendo...").
+             El JS lo muestra cuando el registro es exitoso. -->
         <div id="msg-exito" class="msg-exito"></div>
 
+        <!-- Botón principal de registro.
+             Llama a registrar() en registro.js que valida los campos y hace
+             fetch POST al endpoint /api/auth/registro con los datos del formulario. -->
         <button class="btn-primario" onclick="registrar()">Crear cuenta</button>
 
+        <!-- Texto de navegación hacia el login.
+             Permite al usuario ir a iniciar sesión si ya tiene una cuenta. -->
         <div class="registro">
             ¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a>
         </div>
     </div>
 
+    <!-- registro.js: maneja seleccionarRol(), togglePassword() y registrar()
+         con validaciones de campos, fetch POST al backend y redirección al login -->
     <script src="../js/registro.js"></script>
 </body>
 </html>

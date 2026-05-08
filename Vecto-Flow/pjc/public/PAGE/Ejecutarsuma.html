@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!--
+ * Ejecutarsuma.html — Pantalla de ejecución de la suma de vectores
+ * -----------------------------------------------------------------
+ * Muestra los vectores cargados desde localStorage, permite
+ * ejecutar la suma C[i] = A[i] + B[i] y presenta el resultado
+ * con una tabla comparativa. Desde aquí el estudiante puede
+ * ir al paso a paso, ver la tabla completa o guardar en historial.
+ * La lógica está en suma.js; los estilos de layout en dashboard.css
+ * y los estilos propios de esta página en el <style> inline.
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +17,8 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
     <style>
+        /* Contenedor flex de la previsualización de vectores.
+           flex-wrap permite que se acomoden en varias filas si no caben. */
         .vectores-preview {
             display: flex;
             gap: 16px;
@@ -14,6 +26,8 @@
             margin-bottom: 24px;
         }
 
+        /* Card base de cada vector. El color del borde
+           cambia según la clase aplicada (vec-a, vec-b, etc.) */
         .vector-card {
             background: white;
             border: 2px solid var(--color-borde);
@@ -22,28 +36,34 @@
             min-width: 140px;
         }
 
+        /* Colores de borde para cada tipo de vector */
         .vector-card.vec-a { border-color: rgba(79, 70, 229, 0.4); }
         .vector-card.vec-b { border-color: rgba(6, 182, 212, 0.4); }
         .vector-card.vec-c { border-color: rgba(16, 185, 129, 0.4); }
         .vector-card.vec-extra { border-color: rgba(245, 158, 11, 0.4); }
 
+        /* Título de la card en fuente monoespaciada */
         .vector-card-titulo {
             font-family: 'Space Mono', monospace;
             font-size: 14px;
             font-weight: 700;
             margin-bottom: 10px;
         }
+
+        /* Color del título según el tipo de vector */
         .vec-a .vector-card-titulo { color: var(--color-vector-a); }
         .vec-b .vector-card-titulo { color: var(--color-vector-b); }
         .vec-c .vector-card-titulo { color: var(--color-vector-c); }
         .vec-extra .vector-card-titulo { color: var(--color-advertencia); }
 
+        /* Fila de celdas dentro de cada card */
         .vector-celdas-display {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
         }
 
+        /* Cada celda muestra su índice [i] arriba y el valor abajo */
         .celda-display {
             display: flex;
             flex-direction: column;
@@ -51,12 +71,14 @@
             gap: 2px;
         }
 
+        /* Índice pequeño sobre la celda */
         .celda-display .idx {
             font-size: 9px;
             color: var(--color-texto-suave);
             font-family: 'Space Mono', monospace;
         }
 
+        /* Caja del valor numérico de cada posición del vector */
         .celda-display .val {
             width: 46px;
             height: 38px;
@@ -70,11 +92,13 @@
             border: 2px solid;
         }
 
+        /* Colores de fondo y borde de las celdas según el vector */
         .vec-a .val { border-color: rgba(79, 70, 229, 0.3); color: var(--color-vector-a); background: rgba(79, 70, 229, 0.06); }
         .vec-b .val { border-color: rgba(6, 182, 212, 0.3); color: var(--color-vector-b); background: rgba(6, 182, 212, 0.06); }
         .vec-c .val { border-color: rgba(16, 185, 129, 0.3); color: var(--color-vector-c); background: rgba(16, 185, 129, 0.08); }
         .vec-extra .val { border-color: rgba(245, 158, 11, 0.3); color: var(--color-advertencia); background: rgba(245, 158, 11, 0.06); }
 
+        /* Símbolo '+' o '=' entre vectores */
         .operacion-simbolo {
             font-size: 28px;
             color: var(--color-texto-suave);
@@ -83,6 +107,9 @@
             padding-top: 8px;
         }
 
+        /* Bloque de resultado: oculto por defecto.
+           suma.js le agrega la clase 'visible' al completar la operación.
+           Incluye animación de entrada fadeIn. */
         .resultado-bloque {
             display: none;
             margin-top: 24px;
@@ -103,6 +130,7 @@
             margin-bottom: 16px;
         }
 
+        /* Badge verde que confirma que la suma fue completada con éxito */
         .badge-exito {
             background: var(--color-exito);
             color: white;
@@ -112,6 +140,7 @@
             font-weight: 700;
         }
 
+        /* Fila de botones de acción que aparece tras ejecutar la suma */
         .acciones-resultado {
             display: flex;
             gap: 10px;
@@ -121,6 +150,8 @@
             border-top: 1px solid var(--color-borde);
         }
 
+        /* Alerta de error: oculta por defecto.
+           suma.js la muestra si las dimensiones de los vectores no coinciden. */
         .alerta-box {
             display: none;
             background: #fef2f2;
@@ -139,6 +170,9 @@
 </head>
 <body>
 
+<!-- ── NAVBAR ──────────────────────────────────────────────────
+     Incluye enlace para volver a editar vectores.
+     dashboard.js rellena nombre y avatar del usuario. -->
 <header class="navbar">
     <div class="logo-nav">Vecto<span>Flow</span></div>
     <nav class="menu">
@@ -168,28 +202,31 @@
             Verifica los vectores ingresados y ejecuta la operación <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">C[i] = A[i] + B[i]</code>
         </p>
 
-        <!-- PREVIEW VECTORES -->
+        <!-- Contenedor vacío que suma.js (cargarVectoresPreview) rellena
+             con las cards de cada vector al cargar la página -->
         <div class="vectores-preview" id="vectores-preview">
             <p style="color:var(--color-texto-suave); font-size:13px;">Cargando vectores...</p>
         </div>
 
-        <!-- ALERTA ERROR -->
+        <!-- Alerta roja que suma.js muestra si las dimensiones no coinciden -->
         <div class="alerta-box" id="alerta-error">
             ❌ <span id="alerta-texto">Error</span>
         </div>
 
-        <!-- BOTÓN EJECUTAR -->
+        <!-- Botón principal que dispara ejecutarSuma() de suma.js -->
         <button class="btn btn-exito" id="btn-ejecutar" onclick="ejecutarSuma()" style="margin-top:8px; padding:13px 28px; font-size:15px;">
             ▶ Ejecutar Suma
         </button>
 
-        <!-- RESULTADO -->
+        <!-- Bloque de resultado: oculto hasta que suma.js completa la operación.
+             Contiene el vector C, la tabla comparativa y los botones de acción. -->
         <div class="resultado-bloque" id="resultado-bloque">
             <div class="resultado-header">
                 <h3 style="font-family:'Space Mono',monospace; font-size:16px;">Vector Resultado C</h3>
                 <span class="badge-exito">✓ Suma completada</span>
             </div>
 
+            <!-- Card del vector C con sus celdas (llenada por suma.js) -->
             <div class="vectores-preview">
                 <div class="vector-card vec-c" id="resultado-card">
                     <div class="vector-card-titulo">Vector C (Resultado)</div>
@@ -197,13 +234,18 @@
                 </div>
             </div>
 
-            <!-- TABLA COMPARATIVA RÁPIDA -->
+            <!-- Tabla comparativa A[i] | B[i] | C[i] generada por suma.js -->
             <div class="tabla-wrapper" id="tabla-resultado" style="margin-top:16px;"></div>
 
+            <!-- Botones de acción disponibles tras ejecutar la suma -->
             <div class="acciones-resultado">
+                <!-- Navega a la vista animada paso a paso (Paso_a_paso.js) -->
                 <button class="btn btn-primario" onclick="verPasoAPaso()">👁 Ver paso a paso</button>
+                <!-- Navega a la tabla comparativa completa -->
                 <button class="btn btn-secundario" onclick="verTablaCompleta()">📊 Ver tabla comparativa</button>
+                <!-- Guarda la operación actual en historial_sumas de localStorage -->
                 <button class="btn btn-secundario" onclick="guardarEnHistorial()">💾 Guardar en historial</button>
+                <!-- Vuelve al ingreso de vectores para iniciar una nueva operación -->
                 <a href="../PAGE/Ingresarvectores.html" class="btn btn-peligro">🔄 Nueva operación</a>
             </div>
         </div>
@@ -214,7 +256,9 @@
 
 <footer>VectoFlow © 2025</footer>
 
+<!-- dashboard.js: rellena nombre y avatar; provee logout() -->
 <script src="../js/dashboard.js"></script>
+<!-- suma.js: carga la preview de vectores, ejecuta la suma y gestiona el resultado -->
 <script src="../js/suma.js"></script>
 </body>
 </html>

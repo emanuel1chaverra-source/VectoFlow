@@ -1,12 +1,26 @@
 <!DOCTYPE html>
+<!-- Documento HTML5 en español -->
 <html lang="es">
 <head>
+    <!-- Codificación UTF-8 para soporte de tildes y caracteres especiales -->
     <meta charset="UTF-8">
+    <!-- Viewport responsivo: escala correctamente en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
     <title>Ingresar Vectores — VectoFlow</title>
+
+    <!-- Hoja de estilos global con variables CSS (colores, fuentes, sombras) -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Hoja de estilos del dashboard: navbar, cards, botones, tablas, inputs -->
     <link rel="stylesheet" href="../css/dashboard.css">
+
     <style>
+        /* ====
+           BLOQUE DE VECTOR — Contenedor visual de cada vector (A, B, extras)
+        ==== */
+
+        /* Tarjeta con borde redondeado que agrupa la dimensión y las celdas de un vector.
+           El borde cambia de color según el tipo de vector (A, B o extra). */
         .vector-bloque {
             border: 2px solid var(--color-borde);
             border-radius: 14px;
@@ -14,10 +28,19 @@
             margin-bottom: 16px;
             transition: border-color 0.2s;
         }
+
+        /* Vector A: borde y fondo morado muy translúcido */
         .vector-bloque.vec-a { border-color: rgba(79, 70, 229, 0.3); background: rgba(79, 70, 229, 0.02); }
+        /* Vector B: borde y fondo cyan muy translúcido */
         .vector-bloque.vec-b { border-color: rgba(6, 182, 212, 0.3); background: rgba(6, 182, 212, 0.02); }
+        /* Vectores adicionales (C, D...): borde y fondo amarillo muy translúcido */
         .vector-bloque.vec-extra { border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.02); }
 
+        /* ====
+           ENCABEZADO DEL VECTOR — Fila con nombre del vector y acciones
+        ==== */
+
+        /* Distribuye el nombre del vector a la izquierda y botones a la derecha. */
         .vector-header {
             display: flex;
             justify-content: space-between;
@@ -25,15 +48,25 @@
             margin-bottom: 16px;
         }
 
+        /* Etiqueta del nombre del vector (ej: "Vector A").
+           Fuente monoespaciada Space Mono para identidad visual matemática. */
         .vector-label {
             font-family: 'Space Mono', monospace;
             font-size: 16px;
             font-weight: 700;
         }
+
+        /* Color de la etiqueta según el vector:
+           A → morado, B → cyan, extra → amarillo advertencia */
         .vec-a .vector-label { color: var(--color-vector-a); }
         .vec-b .vector-label { color: var(--color-vector-b); }
         .vec-extra .vector-label { color: var(--color-advertencia); }
 
+        /* ====
+           FILA DE DIMENSIÓN — Input para definir cuántos elementos tiene el vector
+        ==== */
+
+        /* Fila horizontal con label, input numérico y texto de ayuda. */
         .dim-row {
             display: flex;
             align-items: center;
@@ -41,6 +74,7 @@
             margin-bottom: 16px;
         }
 
+        /* Etiqueta "Dimensión:" en color suave y sin salto de línea. */
         .dim-row label {
             font-size: 13px;
             font-weight: 600;
@@ -48,6 +82,7 @@
             white-space: nowrap;
         }
 
+        /* Input numérico de dimensión: ancho fijo, centrado, fuente monoespaciada. */
         .dim-row .input-field {
             width: 80px;
             text-align: center;
@@ -55,13 +90,20 @@
             font-weight: 700;
         }
 
+        /* ====
+           CELDAS DEL VECTOR — Inputs individuales para cada posición del vector
+        ==== */
+
+        /* Contenedor de todas las celdas del vector.
+           flex-wrap permite que las celdas pasen a la siguiente línea si no caben. */
         .celdas-vector {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            min-height: 44px;
+            min-height: 44px; /* Altura mínima para que el área no colapse cuando está vacía */
         }
 
+        /* Agrupa el índice (ej: [0]) con su celda de valor, apilados verticalmente. */
         .celda-wrapper {
             display: flex;
             flex-direction: column;
@@ -69,6 +111,8 @@
             gap: 4px;
         }
 
+        /* Índice de la posición del vector (ej: [0], [1], [2]...).
+           Texto muy pequeño en fuente monoespaciada. */
         .celda-indice {
             font-size: 10px;
             font-weight: 700;
@@ -76,6 +120,8 @@
             font-family: 'Space Mono', monospace;
         }
 
+        /* Input cuadrado para ingresar el valor numérico de cada posición.
+           Fuente monoespaciada para alinear números correctamente. */
         .celda-valor {
             width: 58px;
             height: 44px;
@@ -90,17 +136,23 @@
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
+        /* Al hacer focus en cualquier celda: borde morado y sombra exterior. */
         .celda-valor:focus {
             outline: none;
             border-color: var(--color-primario);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
         }
 
+        /* Focus específico para celdas del Vector A: borde morado */
         .vec-a .celda-valor:focus { border-color: var(--color-vector-a); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+        /* Focus específico para celdas del Vector B: borde cyan */
         .vec-b .celda-valor:focus { border-color: var(--color-vector-b); box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1); }
 
+        /* Celda con error de validación: borde rojo.
+           !important para sobreescribir el borde de focus si aplica. */
         .celda-valor.error { border-color: var(--color-error) !important; }
 
+        /* Texto placeholder que se muestra antes de ingresar la dimensión. */
         .placeholder-celdas {
             color: var(--color-texto-suave);
             font-size: 13px;
@@ -108,6 +160,12 @@
             font-style: italic;
         }
 
+        /* ====
+           ACCIONES INFERIORES — Botones de acción al final del formulario
+        ==== */
+
+        /* Fila de botones: "Agregar vector adicional" y "Guardar y continuar".
+           flex-wrap permite que se apilen en pantallas pequeñas. */
         .acciones-bottom {
             display: flex;
             gap: 12px;
@@ -115,100 +173,162 @@
             margin-top: 8px;
         }
 
+        /* ====
+           ALERTA DE DIMENSIONES — Aviso cuando los vectores no tienen el mismo tamaño
+        ==== */
+
+        /* Alerta oculta por defecto (display: none).
+           Se muestra con la clase .visible cuando las dimensiones no coinciden. */
         .alerta-dim {
             display: none;
-            background: #fffbeb;
-            border: 1px solid #fde68a;
-            color: #92400e;
+            background: #fffbeb;       /* Fondo amarillo muy claro */
+            border: 1px solid #fde68a; /* Borde amarillo */
+            color: #92400e;            /* Texto marrón oscuro */
             border-radius: 10px;
             padding: 12px 16px;
             font-size: 13px;
             margin: 16px 0 0;
         }
 
+        /* Cuando el JS agrega la clase .visible, la alerta se muestra en fila
+           con el ícono ⚠️ y el texto de error. */
         .alerta-dim.visible { display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body>
 
+<!-- ====
+     NAVBAR — Barra de navegación superior
+==== -->
 <header class="navbar">
+    <!-- Logo de la aplicación: "Vecto" en morado, "Flow" en cyan -->
     <div class="logo-nav">Vecto<span>Flow</span></div>
+
+    <!-- Menú de navegación con enlaces a las secciones principales -->
     <nav class="menu">
-        <a href="dashboard-estudiante.html">← Volver</a>
-        <a href="ingresar-vectores.html" class="activo">➕ Nueva Suma</a>
+        <!-- Enlace para volver al dashboard del estudiante -->
+        <a href="../PAGE/dashboard-estudiante.html">← Volver</a>
+        <!-- Enlace activo: página actual (Ingresar Vectores) -->
+        <a href="../PAGE/Ingresarvectores.html" class="activo">➕ Nueva Suma</a>
+        <!-- Enlace al historial de operaciones realizadas -->
         <a href="historial.html">📋 Historial</a>
     </nav>
+
+    <!-- Información del usuario logueado: avatar, nombre, rol y botón de logout -->
     <div class="user-info">
+        <!-- Círculo con la inicial del usuario. El JS lo actualiza dinámicamente. -->
         <div class="avatar" id="avatar-inicial">E</div>
         <div>
+            <!-- Nombre del usuario. El JS lo reemplaza con el nombre real del localStorage. -->
             <div class="nombre-usuario" id="nombre-display">Estudiante</div>
+            <!-- Badge que indica el rol del usuario -->
             <span class="rol-badge estudiante">Estudiante</span>
         </div>
+        <!-- Botón que llama a logout() en dashboard.js para cerrar sesión -->
         <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
     </div>
 </header>
 
+<!-- ====
+     CONTENIDO PRINCIPAL
+==== -->
 <main>
 
+    <!-- Panel principal que contiene el formulario de ingreso de vectores -->
     <div class="panel">
+
+        <!-- Encabezado del panel: título y botón de reinicio -->
         <div class="panel-header">
             <h2 class="panel-titulo">➕ Ingresar Vectores</h2>
+            <!-- Botón que llama a reiniciarTodo() en vectores.js para limpiar todos los campos -->
             <button class="btn btn-peligro" onclick="reiniciarTodo()">🗑 Reiniciar</button>
         </div>
+
+        <!-- Instrucción para el usuario: todos los vectores deben tener la misma dimensión -->
         <p style="font-size:13px; color:var(--color-texto-suave); margin-bottom:20px;">
             Define la dimensión de cada vector e ingresa sus valores. Todos deben tener <strong>el mismo tamaño</strong> para poder sumar.
         </p>
 
-        <!-- VECTOR A -->
+        <!-- ====
+             VECTOR A — Bloque de ingreso del primer vector
+        ==== -->
         <div class="vector-bloque vec-a">
             <div class="vector-header">
+                <!-- Etiqueta identificadora del vector -->
                 <span class="vector-label">Vector A</span>
             </div>
+
+            <!-- Fila para definir la dimensión del Vector A.
+                 oninput llama a generarCeldas('a', valor) en vectores.js
+                 que crea dinámicamente los inputs de cada posición. -->
             <div class="dim-row">
                 <label>Dimensión:</label>
                 <input type="number" class="input-field" id="dim-a" min="1" max="10" placeholder="ej. 4" oninput="generarCeldas('a', this.value)">
                 <span style="font-size:12px; color:var(--color-texto-suave);">elementos (máx. 10)</span>
             </div>
+
+            <!-- Contenedor donde el JS inyecta dinámicamente las celdas del Vector A.
+                 Inicialmente muestra un texto placeholder. -->
             <div class="celdas-vector" id="celdas-a">
                 <span class="placeholder-celdas">Ingresa la dimensión para ver las celdas del vector A</span>
             </div>
         </div>
 
-        <!-- VECTOR B -->
+        <!-- ====
+             VECTOR B — Bloque de ingreso del segundo vector
+        ==== -->
         <div class="vector-bloque vec-b">
             <div class="vector-header">
                 <span class="vector-label">Vector B</span>
             </div>
+
+            <!-- Fila de dimensión del Vector B. Mismo comportamiento que Vector A. -->
             <div class="dim-row">
                 <label>Dimensión:</label>
                 <input type="number" class="input-field" id="dim-b" min="1" max="10" placeholder="ej. 4" oninput="generarCeldas('b', this.value)">
                 <span style="font-size:12px; color:var(--color-texto-suave);">elementos (máx. 10)</span>
             </div>
+
+            <!-- Contenedor de celdas del Vector B, generadas dinámicamente por el JS. -->
             <div class="celdas-vector" id="celdas-b">
                 <span class="placeholder-celdas">Ingresa la dimensión para ver las celdas del vector B</span>
             </div>
         </div>
 
-        <!-- VECTORES ADICIONALES -->
+        <!-- ====
+             VECTORES ADICIONALES — Contenedor dinámico para vectores extra (C, D...)
+             El JS inyecta aquí nuevos bloques al hacer clic en "Agregar vector adicional".
+        ==== -->
         <div id="vectores-extra"></div>
 
-        <!-- ALERTA DIMENSIONES -->
+        <!-- ====
+             ALERTA DE DIMENSIONES — Se muestra si los vectores tienen distinto tamaño
+             El JS agrega la clase .visible cuando detecta dimensiones incompatibles.
+        ==== -->
         <div class="alerta-dim" id="alerta-dim">
             ⚠️ <span id="alerta-dim-texto">Los vectores deben tener la misma dimensión.</span>
         </div>
 
-        <!-- ACCIONES -->
+        <!-- ====
+             ACCIONES — Botones principales del formulario
+        ==== -->
         <div class="acciones-bottom" style="margin-top: 20px;">
+            <!-- Agrega un nuevo bloque de vector extra (C, D...) llamando a agregarVectorExtra() -->
             <button class="btn btn-secundario" onclick="agregarVectorExtra()">➕ Agregar vector adicional</button>
+            <!-- Valida los vectores y navega a la siguiente pantalla (ejecutar suma).
+                 Llama a guardarYContinuar() en vectores.js -->
             <button class="btn btn-exito" onclick="guardarYContinuar()">Guardar vectores y continuar →</button>
         </div>
     </div>
 
 </main>
 
+<!-- Pie de página con copyright -->
 <footer>VectoFlow © 2025</footer>
 
+<!-- dashboard.js: maneja sesión, logout, avatar y nombre del usuario -->
 <script src="../js/dashboard.js"></script>
+<!-- vectores.js: lógica de generación de celdas, validación de dimensiones y guardado -->
 <script src="../js/vectores.js"></script>
 </body>
 </html>

@@ -1,49 +1,89 @@
 <!DOCTYPE html>
+<!-- Documento HTML5 en español -->
 <html lang="es">
 <head>
+    <!-- Codificación UTF-8 para soporte de tildes y caracteres especiales -->
     <meta charset="UTF-8">
+    <!-- Viewport responsivo: escala correctamente en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
     <title>Login — VectoFlow</title>
+
+    <!-- Hoja de estilos global con variables CSS (colores, fuentes, sombras, fondo) -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Hoja de estilos específica del login/registro: card, inputs, chips, botón -->
     <link rel="stylesheet" href="../css/login.css">
 </head>
 <body>
 
+    <!-- Logo de la aplicación centrado en la parte superior de la página.
+         "Vecto" en color primario (morado), "Flow" en color acento (cyan).
+         Estilizado por la clase .logo definida en style.css. -->
     <div class="logo">Vecto<span>Flow</span></div>
 
+    <!-- ====
+         CARD — Tarjeta central que contiene el formulario de inicio de sesión
+    ==== -->
     <div class="card">
+
+        <!-- Título principal del formulario -->
         <h2>Iniciar sesión</h2>
+        <!-- Subtítulo de bienvenida debajo del título -->
         <p class="subtitulo">Bienvenido de vuelta a VectoFlow</p>
 
+        <!-- ====
+             CAMPO: CORREO ELECTRÓNICO
+        ==== -->
         <div class="grupo">
             <label>Correo electrónico</label>
+            <!-- Input de tipo email: el navegador valida el formato automáticamente -->
             <input type="email" id="correo" placeholder="correo@ejemplo.com">
         </div>
 
+        <!-- ====
+             CAMPO: CONTRASEÑA con botón para mostrar/ocultar
+        ==== -->
         <div class="grupo">
             <label>Contraseña</label>
+            <!-- Contenedor relativo para posicionar el ícono del ojo dentro del input -->
             <div class="password-box">
                 <input type="password" id="password" placeholder="Tu contraseña">
+                <!-- Ícono del ojo: al hacer clic llama a togglePassword() en login.js
+                     para alternar entre type="password" y type="text" -->
                 <span class="ver" onclick="togglePassword()">👁</span>
             </div>
         </div>
 
+        <!-- ====
+             CHECKBOX: RECORDARME
+             Permite al usuario mantener la sesión activa.
+             El JS puede leer este valor para guardar el token en localStorage. -->
         <label class="opciones">
             <input type="checkbox" id="recordarme">
             Recordarme
         </label>
 
+        <!-- Contenedor de mensajes de error (ej: "Credenciales incorrectas").
+             El JS lo muestra/oculta dinámicamente según la respuesta del servidor. -->
         <div id="msg-error" class="msg-error"></div>
 
+        <!-- Botón principal de login.
+             Llama a login() en login.js que hace fetch al endpoint /api/auth/login -->
         <button class="btn-primario" onclick="login()">Ingresar</button>
 
+        <!-- Enlace para recuperar contraseña olvidada.
+             Navega a la página de recuperación de contraseña. -->
         <a href="../PAGE/recuperar-password.html" class="link">¿Olvidaste tu contraseña?</a>
 
+        <!-- Texto de navegación hacia el registro.
+             Permite al usuario ir a crear una cuenta si no tiene una. -->
         <div class="registro">
             ¿No tienes cuenta? <a href="../PAGE/registro.html">Crear usuario</a>
         </div>
     </div>
 
+    <!-- login.js: maneja togglePassword(), login() con fetch al backend,
+         validaciones del formulario y redirección según el rol del usuario -->
     <script src="../js/login.js"></script>
 </body>
 </html>

@@ -1,13 +1,27 @@
 <!DOCTYPE html>
+<!-- Documento HTML5 en español -->
 <html lang="es">
 <head>
+    <!-- Codificación UTF-8 para soporte de tildes y caracteres especiales -->
     <meta charset="UTF-8">
+    <!-- Viewport responsivo: escala correctamente en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Título que aparece en la pestaña del navegador -->
     <title>Paso a Paso — VectoFlow</title>
+
+    <!-- Hoja de estilos global con variables CSS (colores, fuentes, sombras) -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Hoja de estilos del dashboard: navbar, panel, botones, inputs -->
     <link rel="stylesheet" href="../css/dashboard.css">
+
     <style>
-        /* ===== ESCENARIO PRINCIPAL ===== */
+        /* ====
+           ESCENARIO PRINCIPAL — Área oscura donde se anima la suma de vectores
+        ==== */
+
+        /* Fondo oscuro (#0f172a = azul marino muy oscuro) que simula un entorno
+           de visualización matemática. Tiene dos gradientes radiales decorativos
+           generados con ::before para dar profundidad visual. */
         .escenario {
             background: #0f172a;
             border-radius: 16px;
@@ -20,19 +34,27 @@
             justify-content: center;
             gap: 24px;
             position: relative;
-            overflow: hidden;
+            overflow: hidden; /* Oculta los gradientes decorativos que salen del borde */
         }
 
+        /* Gradientes decorativos superpuestos sobre el fondo oscuro.
+           Morado a la izquierda, cyan a la derecha. pointer-events: none
+           evita que intercepten los clics del usuario. */
         .escenario::before {
             content: "";
             position: absolute;
             inset: 0;
             background: radial-gradient(ellipse at 30% 50%, rgba(79, 70, 229, 0.15) 0%, transparent 60%),
-                        radial-gradient(ellipse at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%);
+                    radial-gradient(ellipse at 70% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%);
             pointer-events: none;
         }
 
-        /* ===== FILA DE VECTORES ===== */
+        /* ====
+           FILA DE VECTORES — Contenedor horizontal de todos los vectores
+        ==== */
+
+        /* Distribuye los grupos de vectores en fila, alineados por la base.
+           flex-wrap permite que se apilen en pantallas pequeñas. */
         .fila-vectores {
             display: flex;
             align-items: flex-end;
@@ -41,6 +63,7 @@
             justify-content: center;
         }
 
+        /* Agrupa la etiqueta del vector con su fila de celdas, apilados verticalmente. */
         .grupo-vector {
             display: flex;
             flex-direction: column;
@@ -48,6 +71,8 @@
             gap: 6px;
         }
 
+        /* Etiqueta del nombre del vector (ej: "A", "B", "C").
+           Fuente monoespaciada para identidad visual matemática. */
         .etiqueta-vector {
             font-family: 'Space Mono', monospace;
             font-size: 13px;
@@ -55,11 +80,18 @@
             letter-spacing: 0.5px;
         }
 
+        /* Fila horizontal de celdas de un vector. */
         .fila-celdas {
             display: flex;
             gap: 6px;
         }
 
+        /* ====
+           CELDA DE PASO — Cuadro individual que representa una posición del vector
+        ==== */
+
+        /* Celda cuadrada con borde, fondo translúcido y fuente monoespaciada.
+           La transición cubic-bezier da un efecto de "rebote" al activarse. */
         .celda-paso {
             width: 52px;
             height: 52px;
@@ -75,32 +107,17 @@
             position: relative;
         }
 
-        /* Colores normales */
-        .celda-a {
-            border-color: rgba(99, 102, 241, 0.4);
-            background: rgba(99, 102, 241, 0.08);
-            color: #a5b4fc;
-        }
+        /* Colores base de cada vector en estado normal (no activo):
+           Fondo y borde translúcidos, texto en tono claro del color del vector. */
+        .celda-a    { border-color: rgba(99, 102, 241, 0.4); background: rgba(99, 102, 241, 0.08); color: #a5b4fc; }
+        .celda-b    { border-color: rgba(6, 182, 212, 0.4);  background: rgba(6, 182, 212, 0.08);  color: #67e8f9; }
+        .celda-extra{ border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.08); color: #fcd34d; }
+        .celda-c    { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.08); color: #6ee7b7; }
 
-        .celda-b {
-            border-color: rgba(6, 182, 212, 0.4);
-            background: rgba(6, 182, 212, 0.08);
-            color: #67e8f9;
-        }
-
-        .celda-extra {
-            border-color: rgba(245, 158, 11, 0.4);
-            background: rgba(245, 158, 11, 0.08);
-            color: #fcd34d;
-        }
-
-        .celda-c {
-            border-color: rgba(16, 185, 129, 0.4);
-            background: rgba(16, 185, 129, 0.08);
-            color: #6ee7b7;
-        }
-
-        /* CELDA ACTIVA (resaltada) */
+        /* ====
+           CELDA ACTIVA — Estado resaltado cuando el JS está procesando esa posición
+           Se agranda (scale 1.15), se ilumina con sombra de color y texto blanco.
+        ==== */
         .celda-activa-a {
             border-color: #818cf8 !important;
             background: rgba(99, 102, 241, 0.25) !important;
@@ -125,6 +142,7 @@
             box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
         }
 
+        /* La celda del resultado (C) se agranda más (scale 1.2) y tiene sombra verde más intensa. */
         .celda-activa-c {
             border-color: #34d399 !important;
             background: rgba(16, 185, 129, 0.3) !important;
@@ -133,11 +151,13 @@
             box-shadow: 0 0 24px rgba(16, 185, 129, 0.6);
         }
 
-        /* CELDA COMPLETADA */
-        .celda-completa {
-            opacity: 0.5;
-        }
+        /* ====
+           CELDA COMPLETADA — Posición ya procesada, se atenúa para indicar que ya pasó
+        ==== */
+        .celda-completa { opacity: 0.5; }
 
+        /* Excepción: las celdas del resultado (C) ya resueltas no se atenúan,
+           se mantienen visibles con borde y fondo verde más pronunciado. */
         .celda-c.celda-resuelta {
             border-color: rgba(16, 185, 129, 0.7) !important;
             background: rgba(16, 185, 129, 0.15) !important;
@@ -145,7 +165,12 @@
             opacity: 1;
         }
 
-        /* ===== OPERACIÓN ACTUAL ===== */
+        /* ====
+           DISPLAY DE OPERACIÓN — Muestra la ecuación del paso actual
+           Ej: "C[2] = A[2] + B[2]" → "C[2] = 5 + 3 = 8"
+        ==== */
+
+        /* Caja semitransparente centrada debajo de los vectores. */
         .operacion-display {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -155,6 +180,7 @@
             min-width: 300px;
         }
 
+        /* Texto pequeño que muestra el índice actual (ej: "ÍNDICE 2 DE 4"). */
         .operacion-indice {
             font-family: 'Space Mono', monospace;
             font-size: 12px;
@@ -164,6 +190,7 @@
             text-transform: uppercase;
         }
 
+        /* Ecuación principal en grande. Transición de opacidad para animación suave. */
         .operacion-ecuacion {
             font-family: 'Space Mono', monospace;
             font-size: 22px;
@@ -174,17 +201,27 @@
             transition: opacity 0.2s;
         }
 
+        /* Colores de cada parte de la ecuación para identificar cada vector:
+           .op-a → morado claro (Vector A)
+           .op-b → cyan claro (Vector B)
+           .op-c → verde claro (Vector C resultado)
+           .op-num → blanco (números y operadores) */
         .op-a { color: #a5b4fc; }
         .op-b { color: #67e8f9; }
         .op-c { color: #6ee7b7; }
         .op-num { color: white; }
 
-        /* ===== PROGRESO ===== */
+        /* ====
+           BARRA DE PROGRESO — Indica cuántos índices se han procesado
+        ==== */
+
+        /* Contenedor de la barra con ancho máximo para no ocupar todo el escenario. */
         .barra-progreso-wrapper {
             width: 100%;
             max-width: 400px;
         }
 
+        /* Fila con el índice actual a la izquierda y "X / N" a la derecha. */
         .barra-label {
             display: flex;
             justify-content: space-between;
@@ -194,6 +231,7 @@
             margin-bottom: 6px;
         }
 
+        /* Pista de la barra: fondo oscuro translúcido. */
         .barra-progreso {
             height: 4px;
             background: rgba(255,255,255,0.08);
@@ -201,15 +239,21 @@
             overflow: hidden;
         }
 
+        /* Relleno de la barra con gradiente morado→cyan.
+           El JS actualiza el width en % según el progreso. */
         .barra-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--color-primario), var(--color-acento));
             border-radius: 4px;
             transition: width 0.4s ease;
-            width: 0%;
+            width: 0%; /* Inicia en 0%, el JS lo actualiza */
         }
 
-        /* ===== CONTROLES ===== */
+        /* ====
+           CONTROLES DE REPRODUCCIÓN — Botones para navegar la animación
+        ==== */
+
+        /* Fila de botones centrada con separación. flex-wrap para pantallas pequeñas. */
         .controles {
             display: flex;
             align-items: center;
@@ -218,6 +262,8 @@
             justify-content: center;
         }
 
+        /* Botón circular base: borde suave, fondo blanco, ícono centrado.
+           Al hover: borde y texto morado, ligero agrandamiento. */
         .ctrl-btn {
             width: 44px;
             height: 44px;
@@ -239,8 +285,11 @@
             transform: scale(1.05);
         }
 
+        /* Botón deshabilitado: semitransparente y cursor no permitido. */
         .ctrl-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
+        /* Botón Play/Pausa: más grande (56px), fondo morado, ícono blanco.
+           Es el botón principal de la animación. */
         .ctrl-btn-play {
             width: 56px;
             height: 56px;
@@ -257,6 +306,7 @@
             box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
         }
 
+        /* Control de velocidad: label + select para elegir Lento/Normal/Rápido. */
         .velocidad-control {
             display: flex;
             align-items: center;
@@ -274,7 +324,11 @@
             cursor: pointer;
         }
 
-        /* ===== PANEL ESTADO ===== */
+        /* ====
+           CHIP DE ESTADO — Indicador del estado actual de la animación
+        ==== */
+
+        /* Pastilla de estado con padding y bordes redondeados. */
         .estado-chip {
             padding: 5px 14px;
             border-radius: 20px;
@@ -283,25 +337,33 @@
             display: inline-block;
         }
 
-        .estado-espera { background: #f1f5f9; color: var(--color-texto-suave); }
-        .estado-corriendo { background: rgba(79, 70, 229, 0.1); color: var(--color-primario); }
-        .estado-pausado { background: rgba(245, 158, 11, 0.1); color: #b45309; }
+        /* Variantes de color según el estado de la animación:
+           espera → gris, corriendo → morado, pausado → amarillo, completo → verde */
+        .estado-espera   { background: #f1f5f9; color: var(--color-texto-suave); }
+        .estado-corriendo{ background: rgba(79, 70, 229, 0.1); color: var(--color-primario); }
+        .estado-pausado  { background: rgba(245, 158, 11, 0.1); color: #b45309; }
         .estado-completo { background: rgba(16, 185, 129, 0.1); color: #065f46; }
 
-        /* ===== MENSAJE FINAL ===== */
+        /* ====
+           MENSAJE FINAL — Celebración al completar la suma
+        ==== */
+
+        /* Oculto por defecto. El JS agrega .visible cuando la animación termina. */
         .mensaje-final {
             display: none;
             text-align: center;
             padding: 16px;
         }
 
+        /* Al hacerse visible, aparece con animación fadeIn (opacidad + desplazamiento). */
         .mensaje-final.visible { display: block; animation: fadeIn 0.5s ease; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* Fila de botones post-animación: "Ver de nuevo", "Tabla comparativa", "Volver". */
         .acciones-post {
             display: flex;
             gap: 10px;
@@ -313,63 +375,113 @@
 </head>
 <body>
 
+<!-- ====
+     NAVBAR — Barra de navegación superior
+==== -->
 <header class="navbar">
+    <!-- Logo de la aplicación -->
     <div class="logo-nav">Vecto<span>Flow</span></div>
+
+    <!-- Menú de navegación contextual para esta sección -->
     <nav class="menu">
+        <!-- Volver a la pantalla de ejecución de suma -->
         <a href="../PAGE/Ejecutarsuma.html">← Volver a suma</a>
+        <!-- Enlace activo: página actual (Paso a Paso) -->
         <a href="../PAGE/Paso-a-paso.html" class="activo">👁 Paso a paso</a>
+        <!-- Enlace al historial de operaciones -->
         <a href="historial.html">📋 Historial</a>
     </nav>
+
+    <!-- Información del usuario logueado -->
     <div class="user-info">
+        <!-- Avatar con inicial del usuario, actualizado por dashboard.js -->
         <div class="avatar" id="avatar-inicial">E</div>
         <div>
+            <!-- Nombre del usuario, actualizado por dashboard.js desde localStorage -->
             <div class="nombre-usuario" id="nombre-display">Estudiante</div>
             <span class="rol-badge estudiante">Estudiante</span>
         </div>
+        <!-- Botón de cierre de sesión: llama a logout() en dashboard.js -->
         <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
     </div>
 </header>
 
+<!-- ====
+     CONTENIDO PRINCIPAL
+==== -->
 <main>
 
+    <!-- Panel principal de visualización paso a paso -->
     <div class="panel">
+
+        <!-- Encabezado del panel: título, chip de estado y contador de pasos -->
         <div class="panel-header">
             <h2 class="panel-titulo">👁 Visualización Paso a Paso</h2>
             <div style="display:flex; align-items:center; gap:10px;">
+                <!-- Chip de estado: el JS cambia su clase y texto según el estado de la animación -->
                 <span class="estado-chip estado-espera" id="estado-chip">En espera</span>
+                <!-- Contador de pasos (ej: "Paso 2 de 4"), actualizado por el JS -->
                 <span id="paso-contador" style="font-size:13px; color:var(--color-texto-suave); font-family:'Space Mono',monospace;"></span>
             </div>
         </div>
 
+        <!-- Instrucción para el usuario con la fórmula C[i] = A[i] + B[i] en código inline -->
         <p style="font-size:13px; color:var(--color-texto-suave); margin-bottom:20px;">
             Observa cómo se calcula <code style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-size:12px;">C[i] = A[i] + B[i]</code> posición por posición. Usa los controles para avanzar, retroceder o pausar.
         </p>
 
-        <!-- ESCENARIO ANIMADO -->
+        <!-- ====
+             ESCENARIO ANIMADO — Área principal de visualización
+             El JS inyecta aquí los vectores y actualiza las celdas en cada paso.
+        ==== -->
         <div class="escenario" id="escenario">
+
+            <!-- Fila de vectores: el JS genera aquí los grupos de celdas de A, B y C -->
             <div class="fila-vectores" id="fila-vectores"></div>
+
+            <!-- Display de la operación actual.
+                 El JS actualiza op-indice (ej: "ÍNDICE 2 DE 4") y
+                 op-ecuacion (ej: "A[2] + B[2] = C[2]") en cada paso. -->
             <div class="operacion-display" id="operacion-display">
                 <div class="operacion-indice" id="op-indice">—</div>
                 <div class="operacion-ecuacion" id="op-ecuacion">Presiona ▶ para comenzar</div>
             </div>
+
+            <!-- Barra de progreso: el JS actualiza barra-fill width y los labels -->
             <div class="barra-progreso-wrapper">
                 <div class="barra-label">
+                    <!-- Label izquierdo: índice actual (ej: "Índice 2") -->
                     <span id="barra-label-izq">Índice 0</span>
+                    <!-- Label derecho: progreso total (ej: "2 / 4") -->
                     <span id="barra-label-der">— / —</span>
                 </div>
                 <div class="barra-progreso">
+                    <!-- Relleno de la barra: el JS actualiza su width en % -->
                     <div class="barra-fill" id="barra-fill"></div>
                 </div>
             </div>
         </div>
 
-        <!-- CONTROLES -->
+        <!-- ====
+             CONTROLES DE REPRODUCCIÓN
+        ==== -->
         <div class="controles" style="margin-bottom: 20px;">
+            <!-- Botón Retroceder: vuelve al paso anterior. Deshabilitado al inicio. -->
             <button class="ctrl-btn" id="btn-retroceder" onclick="retroceder()" title="Retroceder" disabled>⏮</button>
+
+            <!-- Botón Play/Pausa: inicia o pausa la animación automática.
+                 El JS alterna entre ▶ y ⏸ según el estado. -->
             <button class="ctrl-btn ctrl-btn-play" id="btn-play" onclick="togglePlay()" title="Reproducir / Pausar">▶</button>
+
+            <!-- Botón Avanzar: avanza al siguiente paso manualmente. Deshabilitado al inicio. -->
             <button class="ctrl-btn" id="btn-avanzar" onclick="avanzar()" title="Avanzar" disabled>⏭</button>
+
+            <!-- Botón Reiniciar: vuelve al estado inicial de la animación. -->
             <button class="ctrl-btn" id="btn-reiniciar" onclick="reiniciarAnimacion()" title="Reiniciar">↺</button>
 
+            <!-- Selector de velocidad de la animación.
+                 Los valores son milisegundos entre pasos (1500ms=lento, 900ms=normal, 400ms=rápido).
+                 onchange llama a cambiarVelocidad() en paso-a-paso.js -->
             <div class="velocidad-control">
                 <span>Velocidad:</span>
                 <select id="velocidad-select" onchange="cambiarVelocidad()">
@@ -380,14 +492,23 @@
             </div>
         </div>
 
-        <!-- MENSAJE FINAL -->
+        <!-- ====
+             MENSAJE FINAL — Se muestra cuando la animación completa todos los pasos
+             El JS agrega la clase .visible al terminar.
+        ==== -->
         <div class="mensaje-final" id="mensaje-final">
+            <!-- Emoji de celebración -->
             <div style="font-size: 36px; margin-bottom: 8px;">🎉</div>
             <h3 style="font-family:'Space Mono',monospace; color: var(--color-exito); margin-bottom: 6px;">¡Suma completada!</h3>
             <p style="font-size:13px; color:var(--color-texto-suave);">Has visualizado la operación completa posición por posición.</p>
+
+            <!-- Botones de acción post-animación -->
             <div class="acciones-post">
+                <!-- Reinicia la animación para verla de nuevo -->
                 <button class="btn btn-primario" onclick="reiniciarAnimacion()">↺ Ver de nuevo</button>
+                <!-- Navega a la tabla comparativa de los vectores -->
                 <a href="tabla-comparativa.html" class="btn btn-secundario">📊 Ver tabla comparativa</a>
+                <!-- Vuelve a la pantalla de ejecución de suma -->
                 <a href="ejecutar-suma.html" class="btn btn-secundario">← Volver a suma</a>
             </div>
         </div>
@@ -396,9 +517,13 @@
 
 </main>
 
+<!-- Pie de página con copyright -->
 <footer>VectoFlow © 2025</footer>
 
+<!-- dashboard.js: maneja sesión, logout, avatar y nombre del usuario -->
 <script src="../js/dashboard.js"></script>
+<!-- paso-a-paso.js: lógica de la animación, controles de reproducción,
+     generación de celdas, barra de progreso y mensaje final -->
 <script src="../js/paso-a-paso.js"></script>
 </body>
 </html>
