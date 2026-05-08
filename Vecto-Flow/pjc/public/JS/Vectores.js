@@ -1,5 +1,22 @@
+/*
+ * Vectores.js — Ingreso y validación de vectores
+ * ------------------------------------------------
+ * Permite al usuario definir los vectores A, B y opcionalmente
+ * vectores extra (C, D, E...), ingresando su dimensión y valores
+ * celda por celda. Valida que todos tengan la misma dimensión
+ * antes de guardarlos en localStorage y continuar a la suma.
+ */
+
+
+// Contador de vectores extra agregados dinámicamente (C, D, E...)
 let contadorExtras = 0;
 
+
+/* ── generarCeldas(nombre, dim) ────────────────────────────────
+ * Genera los inputs numéricos del vector A o B según la dimensión
+ * ingresada. Cada celda muestra su índice [i] y un input asociado.
+ * Si la dimensión es inválida (fuera de 1–10), muestra un aviso.
+ * Cada input llama a verificarDimensiones() al cambiar su valor. */
 function generarCeldas(nombre, dim) {
     const n = parseInt(dim);
     const contenedor = document.getElementById(`celdas-${nombre}`);
@@ -19,13 +36,13 @@ function generarCeldas(nombre, dim) {
         idx.innerText = `[${i}]`;
 
         const input = document.createElement('input');
-        input.type = 'number';
-        input.className = 'celda-valor';
-        input.id = `vec-${nombre}-${i}`;
+        input.type        = 'number';
+        input.className   = 'celda-valor';
+        input.id          = `vec-${nombre}-${i}`;
         input.placeholder = '0';
-        input.step = 'any';
+        input.step        = 'any'; // Permite decimales
         input.addEventListener('input', () => {
-            input.classList.remove('error');
+            input.classList.remove('error'); // Limpia error visual al corregir el valor
             verificarDimensiones();
         });
 
@@ -37,6 +54,10 @@ function generarCeldas(nombre, dim) {
     verificarDimensiones();
 }
 
+
+/* ── generarCeldasExtra(id, nombre, dim) ───────────────────────
+ * Igual que generarCeldas() pero para vectores extra (C, D...).
+ * Usa el id único del bloque extra en lugar del nombre del vector. */
 function generarCeldasExtra(id, nombre, dim) {
     const n = parseInt(dim);
     const contenedor = document.getElementById(`celdas-${id}`);
@@ -56,11 +77,11 @@ function generarCeldasExtra(id, nombre, dim) {
         idx.innerText = `[${i}]`;
 
         const input = document.createElement('input');
-        input.type = 'number';
-        input.className = 'celda-valor';
-        input.id = `vec-${id}-${i}`;
+        input.type        = 'number';
+        input.className   = 'celda-valor';
+        input.id          = `vec-${id}-${i}`;
         input.placeholder = '0';
-        input.step = 'any';
+        input.step        = 'any';
         input.addEventListener('input', verificarDimensiones);
 
         wrapper.appendChild(idx);
@@ -71,16 +92,22 @@ function generarCeldasExtra(id, nombre, dim) {
     verificarDimensiones();
 }
 
+
+/* ── agregarVectorExtra() ──────────────────────────────────────
+ * Crea dinámicamente un nuevo bloque de vector extra en el DOM.
+ * Los nombres siguen la secuencia C, D, E, F, G.
+ * Cada bloque incluye su propio input de dimensión, celdas
+ * y un botón para eliminarlo. */
 function agregarVectorExtra() {
     contadorExtras++;
-    const id = `extra-${contadorExtras}`;
+    const id     = `extra-${contadorExtras}`;
     const nombres = ['C', 'D', 'E', 'F', 'G'];
-    const nombre = nombres[contadorExtras - 1] || `V${contadorExtras + 2}`;
+    const nombre  = nombres[contadorExtras - 1] || `V${contadorExtras + 2}`;
 
     const contenedor = document.getElementById('vectores-extra');
-    const bloque = document.createElement('div');
+    const bloque     = document.createElement('div');
     bloque.className = 'vector-bloque vec-extra';
-    bloque.id = `bloque-${id}`;
+    bloque.id        = `bloque-${id}`;
     bloque.innerHTML = `
         <div class="vector-header">
             <span class="vector-label">Vector ${nombre}</span>
@@ -98,21 +125,29 @@ function agregarVectorExtra() {
     contenedor.appendChild(bloque);
 }
 
+
+// Elimina el bloque de un vector extra del DOM y re-verifica dimensiones
 function eliminarVectorExtra(id) {
     const bloque = document.getElementById(`bloque-${id}`);
     if (bloque) bloque.remove();
     verificarDimensiones();
 }
 
+
+/* ── verificarDimensiones() ────────────────────────────────────
+ * Compara las dimensiones de todos los vectores activos (A, B y extras).
+ * Si no coinciden, muestra una alerta con los valores detectados.
+ * Se ejecuta cada vez que el usuario cambia una dimensión o un valor. */
 function verificarDimensiones() {
     const dimA = parseInt(document.getElementById('dim-a')?.value);
     const dimB = parseInt(document.getElementById('dim-b')?.value);
-    const alerta = document.getElementById('alerta-dim');
+    const alerta      = document.getElementById('alerta-dim');
     const alertaTexto = document.getElementById('alerta-dim-texto');
 
+    // Si falta alguna dimensión principal, ocultar alerta y salir
     if (!dimA || !dimB) { alerta.classList.remove('visible'); return; }
 
-    // Recopilar todas las dimensiones
+    // Recopilar todas las dimensiones incluyendo los extras
     const dims = [dimA, dimB];
     const extras = document.querySelectorAll('[id^="dim-extra-"]');
     extras.forEach(e => { const v = parseInt(e.value); if (v) dims.push(v); });
@@ -127,6 +162,11 @@ function verificarDimensiones() {
     }
 }
 
+
+/* ── obtenerValoresVector(id, dim) ─────────────────────────────
+ * Recorre los inputs de un vector y devuelve sus valores como
+ * array de números. Si algún campo está vacío o no es numérico,
+ * le aplica la clase 'error' visualmente y retorna null. */
 function obtenerValoresVector(id, dim) {
     const valores = [];
     for (let i = 0; i < dim; i++) {
@@ -139,6 +179,11 @@ function obtenerValoresVector(id, dim) {
     return valores;
 }
 
+
+/* ── reiniciarTodo() ───────────────────────────────────────────
+ * Pide confirmación y limpia todos los vectores del formulario:
+ * dimensiones, celdas y bloques extra. El historial de sumas
+ * en localStorage no se ve afectado. */
 function reiniciarTodo() {
     if (!confirm('¿Seguro que quieres reiniciar todos los vectores? El historial no se borrará.')) return;
 
@@ -151,6 +196,13 @@ function reiniciarTodo() {
     contadorExtras = 0;
 }
 
+
+/* ── guardarYContinuar() ───────────────────────────────────────
+ * Valida que A y B tengan dimensión ingresada y que coincidan.
+ * Luego recoge los valores de todos los vectores (A, B y extras),
+ * verifica que los extras también tengan la misma dimensión,
+ * guarda el array de vectores en localStorage y redirige a la
+ * pantalla de ejecución de la suma. */
 function guardarYContinuar() {
     const dimA = parseInt(document.getElementById('dim-a').value);
     const dimB = parseInt(document.getElementById('dim-b').value);
@@ -174,13 +226,13 @@ function guardarYContinuar() {
         return;
     }
 
-    // Construir objeto de vectores
+    // Construir el array de vectores con A y B como base
     const vectores = [
         { nombre: 'A', valores: valA, dim: dimA },
         { nombre: 'B', valores: valB, dim: dimB }
     ];
 
-    // Extras
+    // Agregar vectores extra si existen, validando su dimensión
     let i = 1;
     while (document.getElementById(`bloque-extra-${i}`)) {
         const dimExtra = parseInt(document.getElementById(`dim-extra-${i}`)?.value);
@@ -195,7 +247,7 @@ function guardarYContinuar() {
         i++;
     }
 
-    // Guardar en localStorage y redirigir
+    // Guardar vectores y redirigir a la pantalla de suma
     localStorage.setItem('vectores_activos', JSON.stringify(vectores));
     window.location.href = '../PAGE/Ejecutarsuma.html';
 }

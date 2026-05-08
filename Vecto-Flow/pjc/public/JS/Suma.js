@@ -1,12 +1,33 @@
+/*
+ * Suma.js — Lógica de la pantalla de ejecución de suma de vectores
+ * -----------------------------------------------------------------
+ * Carga los vectores guardados en localStorage, los previsualiza,
+ * ejecuta la suma elemento a elemento, muestra el resultado con
+ * una tabla comparativa y permite navegar a la vista paso a paso,
+ * tabla completa o guardar la operación en el historial.
+ */
+
+
+// Clases CSS para colorear cada vector según su posición en la operación
 const COLORES_CLASE = ['vec-a', 'vec-b', 'vec-extra', 'vec-extra', 'vec-extra'];
+
+// Almacena el resultado de la última suma ejecutada (vectores, resultado, dim, fecha)
 let resultadoActual = null;
 
+
+// Al cargar el DOM, muestra la previsualización de los vectores activos
 window.addEventListener('DOMContentLoaded', () => {
     cargarVectoresPreview();
 });
 
+
+/* ── cargarVectoresPreview() ───────────────────────────────────
+ * Lee los vectores desde localStorage y los renderiza como cards
+ * en el contenedor #vectores-preview, separados por el símbolo '+'.
+ * Si no hay vectores guardados, muestra un aviso y deshabilita
+ * el botón de ejecutar. */
 function cargarVectoresPreview() {
-    const data = localStorage.getItem('vectores_activos');
+    const data       = localStorage.getItem('vectores_activos');
     const contenedor = document.getElementById('vectores-preview');
 
     if (!data) {
@@ -19,6 +40,7 @@ function cargarVectoresPreview() {
     contenedor.innerHTML = '';
 
     vectores.forEach((vec, idx) => {
+        // Separador '+' entre vectores
         if (idx > 0) {
             const simbolo = document.createElement('div');
             simbolo.className = 'operacion-simbolo';
@@ -26,6 +48,7 @@ function cargarVectoresPreview() {
             contenedor.appendChild(simbolo);
         }
 
+        // Card del vector con su nombre y celdas de valores
         const card = document.createElement('div');
         card.className = `vector-card ${idx === 0 ? 'vec-a' : idx === 1 ? 'vec-b' : 'vec-extra'}`;
 
@@ -36,6 +59,7 @@ function cargarVectoresPreview() {
         const celdas = document.createElement('div');
         celdas.className = 'vector-celdas-display';
 
+        // Cada celda muestra el índice [i] y el valor correspondiente
         vec.valores.forEach((val, i) => {
             const wrapper = document.createElement('div');
             wrapper.className = 'celda-display';
@@ -49,15 +73,23 @@ function cargarVectoresPreview() {
     });
 }
 
+
+/* ── ejecutarSuma() ────────────────────────────────────────────
+ * Calcula C[i] = A[i] + B[i] + ... + N[i] para cada posición.
+ *
+ * Primero valida que todos los vectores tengan la misma dimensión.
+ * Luego calcula la suma, muestra las celdas del resultado, genera
+ * una tabla comparativa HTML con todos los vectores y guarda el
+ * resultado en localStorage para que paso-a-paso.js lo consuma. */
 function ejecutarSuma() {
     const data = localStorage.getItem('vectores_activos');
     if (!data) return;
 
     const vectores = JSON.parse(data);
-    const alerta = document.getElementById('alerta-error');
+    const alerta   = document.getElementById('alerta-error');
     alerta.classList.remove('visible');
 
-    // Validar dimensiones
+    // Validar que todos los vectores tengan la misma cantidad de elementos
     const dim = vectores[0].dim;
     for (const v of vectores) {
         if (v.dim !== dim) {
@@ -68,7 +100,8 @@ function ejecutarSuma() {
         }
     }
 
-    // Calcular C[i] = A[i] + B[i] + ... + N[i]
+    // Calcular C[i] sumando el valor en la posición i de cada vector
+    // toFixed(4) evita errores de precisión de punto flotante
     const resultado = [];
     for (let i = 0; i < dim; i++) {
         let suma = 0;
@@ -76,9 +109,10 @@ function ejecutarSuma() {
         resultado.push(parseFloat(suma.toFixed(4)));
     }
 
+    // Guardar el resultado completo para usarlo en otras vistas
     resultadoActual = { vectores, resultado, dim, fecha: new Date().toISOString() };
 
-    // Mostrar resultado
+    // Renderizar las celdas del vector resultado C
     const celdas = document.getElementById('resultado-celdas');
     celdas.innerHTML = '';
     resultado.forEach((val, i) => {
@@ -89,7 +123,7 @@ function ejecutarSuma() {
             </div>`;
     });
 
-    // Tabla comparativa rápida
+    // Construir tabla comparativa: una columna por vector + columna C
     const tablaDiv = document.getElementById('tabla-resultado');
     let html = '<table><thead><tr><th class="col-idx">Índice</th>';
     vectores.forEach(v => {
@@ -109,23 +143,33 @@ function ejecutarSuma() {
     html += '</tbody></table>';
     tablaDiv.innerHTML = html;
 
-    // Guardar resultado en localStorage para paso a paso
+    // Persiste el resultado para que paso-a-paso.js y tabla-comparativa.js lo lean
     localStorage.setItem('resultado_suma', JSON.stringify(resultadoActual));
 
+    // Muestra el bloque de resultado y hace scroll suave hacia él
     document.getElementById('resultado-bloque').classList.add('visible');
     document.getElementById('resultado-bloque').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+
+// Redirige a la vista animada paso a paso (requiere suma ejecutada)
 function verPasoAPaso() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
     window.location.href = 'paso-a-paso.html';
 }
 
+
+// Redirige a la tabla comparativa completa (requiere suma ejecutada)
 function verTablaCompleta() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
     window.location.href = 'tabla-comparativa.html';
 }
 
+
+/* ── guardarEnHistorial() ──────────────────────────────────────
+ * Agrega el resultado actual al historial de sumas en localStorage.
+ * Usa unshift() para que la operación más reciente quede primero.
+ * El historial es un array de objetos resultadoActual. */
 function guardarEnHistorial() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
 

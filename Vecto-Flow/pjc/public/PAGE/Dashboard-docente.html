@@ -1,54 +1,86 @@
 <!DOCTYPE html>
+<!--
+ * Dashboard-docente.html — Panel principal del usuario Docente
+ * -------------------------------------------------------------
+ * Página de inicio del docente después de iniciar sesión.
+ * Muestra un menú de navegación, cards de acceso rápido a las
+ * funcionalidades principales y una tabla con los ejercicios
+ * creados recientemente, cargados desde localStorage.
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- Hace la página responsive en dispositivos móviles -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Docente — VectoFlow</title>
+    <!-- Estilos globales de la app -->
     <link rel="stylesheet" href="../css/style.css">
+    <!-- Estilos específicos del dashboard -->
     <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
+<!-- ── BARRA DE NAVEGACIÓN SUPERIOR ────────────────────────────
+     Contiene el logo, links de navegación y la info del usuario.
+     dashboard.js rellena dinámicamente el nombre, avatar e inicial. -->
 <header class="navbar">
+    <!-- Logo de la aplicación -->
     <div class="logo-nav">Vecto<span>Flow</span></div>
+
+    <!-- Links de navegación principal del docente -->
     <nav class="menu">
         <a href="../PAGE/Dashboard-docente.html" class="activo">🏠 Inicio</a>
         <a href="crear-ejercicio.html">📝 Crear Ejercicio</a>
         <a href="monitoreo-estudiantes.html">👥 Monitoreo</a>
     </nav>
+
+    <!-- Info del usuario: avatar, nombre, rol y botón de logout -->
     <div class="user-info">
+        <!-- Avatar circular con la inicial del nombre (llenado por dashboard.js) -->
         <div class="avatar" id="avatar-inicial">D</div>
         <div>
+            <!-- Nombre del docente logueado (llenado por dashboard.js) -->
             <div class="nombre-usuario" id="nombre-display">Docente</div>
             <span class="rol-badge docente">Docente</span>
         </div>
+        <!-- Llama a logout() de dashboard.js para cerrar sesión -->
         <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
     </div>
 </header>
 
 <main>
 
+    <!-- ── MENSAJE DE BIENVENIDA ────────────────────────────────
+         El span #bienvenida-nombre es rellenado por dashboard.js
+         con el nombre del docente autenticado. -->
     <div class="bienvenida">
         <h2>Panel Docente — <span id="bienvenida-nombre">Docente</span> 📋</h2>
         <p>Gestiona tus ejercicios, asígnalos a estudiantes y monitorea su progreso.</p>
     </div>
 
+    <!-- ── CARDS DE ACCESO RÁPIDO ───────────────────────────────
+         Cuatro módulos principales del rol docente.
+         Cada card es un enlace a su página correspondiente. -->
     <div class="cards">
+        <!-- Card: Crear ejercicio con vectores para asignar -->
         <a href="crear-ejercicio.html" class="card-modulo">
             <span class="icono-modulo">📝</span>
             <h3>Crear Ejercicio</h3>
             <p>Define vectores A y B con valores específicos para asignar a tus estudiantes</p>
         </a>
+        <!-- Card: Ver y gestionar ejercicios ya creados -->
         <a href="mis-ejercicios.html" class="card-modulo">
             <span class="icono-modulo">📚</span>
             <h3>Mis Ejercicios</h3>
             <p>Consulta, edita y asigna los ejercicios que has creado</p>
         </a>
+        <!-- Card: Ver actividad y métricas de los estudiantes -->
         <a href="monitoreo-estudiantes.html" class="card-modulo">
             <span class="icono-modulo">👥</span>
             <h3>Monitoreo</h3>
             <p>Revisa el historial y métricas de desempeño de cada estudiante</p>
         </a>
+        <!-- Card: Exportar reportes (funcionalidad pendiente) -->
         <a href="#" class="card-modulo">
             <span class="icono-modulo">📊</span>
             <h3>Reportes</h3>
@@ -56,13 +88,18 @@
         </a>
     </div>
 
-    <!-- RESUMEN RÁPIDO -->
+    <!-- ── PANEL: EJERCICIOS RECIENTES ──────────────────────────
+         Muestra hasta 5 ejercicios creados recientemente.
+         El contenido es generado dinámicamente por el script
+         al final del body. Si no hay ejercicios, muestra un
+         mensaje invitando a crear el primero. -->
     <div class="panel">
         <div class="panel-header">
             <h3 class="panel-titulo">📌 Ejercicios recientes</h3>
             <a href="crear-ejercicio.html" class="btn btn-primario" style="padding:8px 16px; font-size:13px;">+ Nuevo ejercicio</a>
         </div>
 
+        <!-- Contenedor donde el script inyecta la tabla de ejercicios -->
         <div id="ejercicios-recientes">
             <p style="font-size:13px; color:var(--color-texto-suave); text-align:center; padding:20px 0;">
                 Aún no has creado ejercicios. <a href="crear-ejercicio.html" style="color:var(--color-primario); font-weight:600;">Crear el primero →</a>
@@ -74,20 +111,28 @@
 
 <footer>VectoFlow © 2025</footer>
 
+<!-- dashboard.js: rellena nombre, avatar e inicial; provee logout() -->
 <script src="../js/dashboard.js"></script>
+
 <script>
-// Cargar ejercicios recientes
+// ── Cargar tabla de ejercicios recientes ────────────────────────
+// Lee 'ejercicios_docente' de localStorage y construye una tabla
+// HTML con los 5 más recientes. Si no hay ejercicios, no hace nada
+// y queda visible el mensaje por defecto del HTML.
 window.addEventListener('DOMContentLoaded', () => {
     const ejercicios = JSON.parse(localStorage.getItem('ejercicios_docente') || '[]');
     if (ejercicios.length === 0) return;
 
-    const cont = document.getElementById('ejercicios-recientes');
-    const recientes = ejercicios.slice(0, 5);
+    const cont     = document.getElementById('ejercicios-recientes');
+    const recientes = ejercicios.slice(0, 5); // Solo los 5 más recientes
+
+    // Construye la tabla con título, dimensión, fecha y botón de asignar
     let html = '<div class="tabla-wrapper"><table><thead><tr><th>Título</th><th>Dimensión</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>';
     recientes.forEach(ej => {
         html += `<tr>
             <td><strong>${ej.titulo}</strong></td>
             <td>${ej.dim} elementos</td>
+            <!-- toLocaleDateString('es-CO') formatea la fecha en español colombiano -->
             <td>${new Date(ej.fecha).toLocaleDateString('es-CO')}</td>
             <td><a href="crear-ejercicio.html" class="btn btn-secundario" style="padding:5px 12px; font-size:12px;">Asignar</a></td>
         </tr>`;

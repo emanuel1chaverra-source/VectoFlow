@@ -1,83 +1,271 @@
+/*
+ * ============================================================
+ *  style.css — Hoja de estilos principal del proyecto
+ * ============================================================
+ *  Define la identidad visual global: tipografías, variables
+ *  de diseño, reset de estilos y componentes de UI reutilizables
+ *  (logo, mensajes de estado).
+ * ============================================================
+ */
+
+
+/* ============================================================
+ *  IMPORTACIÓN DE FUENTES (Google Fonts)
+ * ============================================================
+ *  Se cargan dos familias tipográficas desde Google Fonts:
+ *
+ *  · Space Mono  → fuente monoespaciada con pesos 400 y 700.
+ *    Se usa para elementos de marca (logo) y datos técnicos.
+ *
+ *  · DM Sans     → fuente sans-serif moderna con pesos
+ *    300 / 400 / 500 / 600 / 700.
+ *    Es la tipografía base de toda la interfaz.
+ *
+ *  'display=swap' permite que el navegador muestre el texto
+ *  con una fuente de reserva mientras descarga las fuentes
+ *  personalizadas, evitando el "flash" de texto invisible.
+ * ============================================================ */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+
+/* ============================================================
+ *  VARIABLES GLOBALES DE DISEÑO (:root)
+ * ============================================================
+ *  Declaradas en el pseudo-elemento :root (equivalente al
+ *  elemento <html>), estas variables CSS están disponibles
+ *  en TODA la hoja de estilos y en los archivos que la
+ *  importen.
+ *
+ *  Modificar un valor aquí lo actualiza automáticamente en
+ *  todos los lugares donde se referencia esa variable.
+ * ============================================================ */
 :root {
-    --color-primario: #4f46e5;
-    --color-secundario: #6366f1;
-    --color-acento: #06b6d4;
-    --color-exito: #10b981;
-    --color-error: #ef4444;
-    --color-advertencia: #f59e0b;
-    --color-fondo: #f0f2ff;
-    --color-texto: #0f172a;
-    --color-texto-suave: #64748b;
-    --color-card: #ffffff;
-    --color-borde: #e2e8f0;
-    --color-vector-a: #4f46e5;
-    --color-vector-b: #06b6d4;
-    --color-vector-c: #10b981;
-    --radio: 12px;
-    --sombra: 0 4px 24px rgba(79, 70, 229, 0.08);
-    --sombra-hover: 0 8px 32px rgba(79, 70, 229, 0.16);
-    --transicion: 0.2s ease;
+    /* ── PALETA DE COLORES PRINCIPALES ────────────────────────
+     *  Define los colores semánticos de la interfaz.
+     *  Cada variable tiene un rol específico en el sistema
+     *  de diseño. */
+
+    --color-primario:#4f46e5;  /* Índigo — color de marca principal.
+                                        Usado en botones primarios, logo,
+                                        sombras y elementos destacados. */
+
+    --color-secundario:#6366f1;  /* Índigo claro — variante del primario.
+                                        Sirve para degradados o estados hover
+                                        del color primario. */
+
+    --color-acento:        #06b6d4;  /* Cian brillante — contraste visual.
+                                        Resalta partes del logo, iconos
+                                        o elementos interactivos secundarios. */
+
+    --color-exito:         #10b981;  /* Verde esmeralda — estado positivo.
+                                        Usado en mensajes de éxito, validaciones
+                                        correctas o indicadores "OK". */
+
+    --color-error:         #ef4444;  /* Rojo — estado de fallo o peligro.
+                                        Usado en mensajes de error, campos
+                                        inválidos y alertas críticas. */
+
+    --color-advertencia:   #f59e0b;  /* Ámbar — estado de precaución.
+                                        Usado en avisos que requieren atención
+                                        sin ser errores críticos. */
+
+    /* ── COLORES DE SUPERFICIE Y TEXTO ────────────────────────
+     *  Controlan el fondo, el texto y los bordes de la UI. */
+
+    --color-fondo:         #f0f2ff;  /* Fondo general de la página.
+                                        Tono índigo muy pálido para
+                                        coherencia con la paleta principal. */
+
+    --color-texto:         #0f172a;  /* Texto principal (casi negro azulado).
+                                        Alto contraste sobre el fondo claro. */
+
+    --color-texto-suave:   #64748b;  /* Texto secundario / placeholders.
+                                        Gris azulado para información
+                                        de menor jerarquía visual. */
+
+    --color-card:          #ffffff;  /* Fondo blanco puro para tarjetas,
+                                        modales y paneles elevados. */
+
+    --color-borde:         #e2e8f0;  /* Color de bordes y separadores.
+                                        Gris azulado muy suave para
+                                        delimitar secciones sin agresividad. */
+
+    /* ── COLORES DE VECTORES (uso específico) ─────────────────
+     *  Utilizados probablemente en gráficos, diagramas o
+     *  visualizaciones donde se diferencian elementos A, B y C. */
+
+    --color-vector-a:      #4f46e5;  /* Vector A → índigo (igual al primario). */
+    --color-vector-b:      #06b6d4;  /* Vector B → cian (igual al acento). */
+    --color-vector-c:      #10b981;  /* Vector C → verde (igual al éxito). */
+
+    /* ── BORDES REDONDEADOS ────────────────────────────────────
+     *  Radio estándar aplicado a tarjetas, botones y contenedores
+     *  para mantener consistencia visual en toda la interfaz. */
+
+    --radio:               12px;
+
+    /* ── SOMBRAS ───────────────────────────────────────────────
+     *  Dos niveles de sombra basados en el color primario
+     *  con baja opacidad, lo que integra la sombra con la
+     *  paleta en lugar de usar grises genéricos. */
+
+    --sombra:              0 4px 24px rgba(79, 70, 229, 0.08);  /* Sombra en reposo.
+                                                                    Sutil, para
+                                                                    elevar tarjetas
+                                                                    ligeramente. */
+
+    --sombra-hover:        0 8px 32px rgba(79, 70, 229, 0.16); /* Sombra al hacer hover.
+                                                                    Más pronunciada para
+                                                                    dar feedback visual
+                                                                    de interacción. */
+
+    /* ── TRANSICIÓN ESTÁNDAR ───────────────────────────────────
+     *  Duración y curva de animación usadas en todos los
+     *  efectos hover y de estado para mantener coherencia. */
+
+    --transicion:          0.2s ease;  /* 200ms con aceleración suave.
+                                          Rápido pero perceptible. */
 }
 
+
+/* ============================================================
+ *  RESET GLOBAL DE ESTILOS  (* selector universal)
+ * ============================================================
+ *  Se aplica a TODOS los elementos del DOM.
+ *  Elimina inconsistencias entre navegadores y establece
+ *  una base predecible para el sistema de diseño.
+ * ============================================================ */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    box-sizing: border-box; /* El padding y el border se incluyen dentro
+                               del ancho/alto declarado del elemento.
+                               Evita desbordamientos inesperados de layout. */
+    margin:  0;             /* Elimina márgenes por defecto del navegador. */
+    padding: 0;             /* Elimina rellenos por defecto del navegador. */
 }
 
+
+/* ============================================================
+ *  ESTILOS BASE DEL CUERPO  (body)
+ * ============================================================
+ *  Configura la apariencia y comportamiento de la página completa.
+ * ============================================================ */
 body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--color-fondo);
-    color: var(--color-texto);
-    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif; /* Tipografía principal de la interfaz.
+                                           'sans-serif' es el fallback si
+                                           DM Sans no se carga. */
+
+    background: var(--color-fondo);     /* Fondo general de la página usando
+                                           la variable definida en :root. */
+
+    color: var(--color-texto);          /* Color de texto predeterminado para
+                                           toda la página. */
+
+    min-height: 100vh;                  /* La página ocupa al menos el 100% de
+                                           la altura visible del navegador,
+                                           evitando fondos cortados en páginas
+                                           con poco contenido. */
 }
 
-/* LOGO */
+
+/* ============================================================
+ *  COMPONENTE: LOGO  (.logo)
+ * ============================================================
+ *  Estilos para el logotipo/nombre de la aplicación que
+ *  aparece en la parte superior de la interfaz.
+ * ============================================================ */
 .logo {
-    text-align: center;
-    margin-top: 40px;
-    font-family: 'Space Mono', monospace;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--color-primario);
-    letter-spacing: -1px;
+    text-align: center;                    /* Centra el logo horizontalmente. */
+    margin-top: 40px;                      /* Espacio superior para separarlo
+                                              del borde de la ventana. */
+    font-family: 'Space Mono', monospace; /* Usa la fuente monoespaciada para
+                                              dar un estilo técnico/de código
+                                              al nombre de la app. */
+    font-size: 28px;                       /* Tamaño grande y visible como cabecera. */
+    font-weight: 700;                      /* Negrita para mayor impacto visual. */
+    color: var(--color-primario);          /* Índigo como color principal del logo. */
+    letter-spacing: -1px;                  /* Reduce el espaciado entre letras
+                                              ligeramente para un aspecto más
+                                              compacto y moderno. */
 }
 
+/* ── Parte secundaria del logo (etiqueta <span> interna) ──────
+ *  Permite colorear una porción del texto del logo con el
+ *  color de acento (cian), creando un contraste bicolor
+ *  característico de la identidad visual.
+ *  Ejemplo: "Vector" en índigo + "Lab" en cian. */
 .logo span {
-    color: var(--color-acento);
+    color: var(--color-acento); /* Cian brillante para destacar
+                                   la segunda parte del nombre. */
 }
 
-/* MENSAJES */
+
+/* ============================================================
+ *  COMPONENTES DE MENSAJES DE ESTADO
+ * ============================================================
+ *  Tres variantes de alerta/notificación en línea que
+ *  informan al usuario sobre el resultado de una acción.
+ *  Todos comparten la misma estructura base pero con
+ *  colores semánticos diferentes.
+ *
+ *  Patrón de uso:
+ *    · Se muestran/ocultan dinámicamente desde JavaScript
+ *      cambiando la propiedad 'display' (inline o block).
+ *    · Por defecto, .msg-error y .msg-exito están ocultos
+ *      (display: none); .msg-advertencia siempre es visible.
+ * ============================================================ */
+
+/* ── Mensaje de ERROR (.msg-error) ───────────────────────────
+ *  Se muestra cuando ocurre un fallo (entrada inválida,
+ *  operación fallida, etc.). */
 .msg-error {
-    background: #fef2f2;
-    color: var(--color-error);
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 13px;
-    margin-top: 10px;
-    display: none;
+    background:    #fef2f2;             /* Fondo rojo muy pálido para
+                                           resaltar el contexto de error. */
+    color:         var(--color-error);  /* Texto rojo (#ef4444). */
+    border:        1px solid #fecaca;   /* Borde rojo suave que delimita
+                                           el área de alerta. */
+    border-radius: 8px;                 /* Esquinas redondeadas, ligeramente
+                                           menores que --radio para ser
+                                           más compacto. */
+    padding:       10px 14px;           /* Espaciado interno: 10px vertical,
+                                           14px horizontal. */
+    font-size:     13px;                /* Texto pequeño, de apoyo, sin
+                                           competir con el contenido principal. */
+    margin-top:    10px;                /* Separa el mensaje del elemento
+                                           que lo precede (ej. un input). */
+    display:       none;                /* OCULTO por defecto. JavaScript lo
+                                           muestra cuando ocurre un error. */
 }
 
+/* ── Mensaje de ÉXITO (.msg-exito) ───────────────────────────
+ *  Se muestra cuando una acción se completa correctamente. */
 .msg-exito {
-    background: #f0fdf4;
-    color: var(--color-exito);
-    border: 1px solid #bbf7d0;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 13px;
-    margin-top: 10px;
-    display: none;
+    background:    #f0fdf4;             /* Fondo verde muy pálido para
+                                           indicar contexto positivo. */
+    color:         var(--color-exito);  /* Texto verde esmeralda (#10b981). */
+    border:        1px solid #bbf7d0;   /* Borde verde suave. */
+    border-radius: 8px;                 /* Mismo radio que .msg-error para
+                                           consistencia visual. */
+    padding:       10px 14px;           /* Mismo padding que .msg-error. */
+    font-size:     13px;                /* Mismo tamaño de fuente. */
+    margin-top:    10px;                /* Misma separación superior. */
+    display:       none;                /* OCULTO por defecto. JavaScript lo
+                                           muestra al completar una acción. */
 }
 
+/* ── Mensaje de ADVERTENCIA (.msg-advertencia) ────────────────
+ *  Se muestra como aviso permanente o condicional.
+ *  A diferencia de los anteriores, NO está oculto por defecto,
+ *  lo que sugiere que es un mensaje informativo siempre visible
+ *  (ej. un disclaimer o limitación de la herramienta). */
 .msg-advertencia {
-    background: #fffbeb;
-    color: #92400e;
-    border: 1px solid #fde68a;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 13px;
-    margin-top: 10px;
+    background:    #fffbeb;  /* Fondo ámbar muy pálido. */
+    color:         #92400e;  /* Marrón ámbar oscuro para el texto.
+                                Mejor contraste sobre el fondo claro
+                                que el --color-advertencia (#f59e0b). */
+    border:        1px solid #fde68a;  /* Borde ámbar suave. */
+    border-radius: 8px;                /* Mismo radio para consistencia. */
+    padding:       10px 14px;          /* Mismo padding. */
+    font-size:     13px;               /* Mismo tamaño de fuente. */
+    margin-top:    10px;               /* Misma separación superior. */
+    /* Sin 'display: none' → siempre visible en el DOM. */
 }

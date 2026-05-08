@@ -1,4 +1,22 @@
-/* FONDO CON PATRÓN */
+/* ============================================================
+   ARCHIVO: login.css
+   DESCRIPCIÓN: Estilos para las páginas de Login y Registro de VectoFlow.
+   Aplica a: fondo, card central, inputs, chips de rol, botón principal,
+   divisor, links y textos de navegación entre páginas.
+   Depende de variables CSS globales definidas en style.css como:
+   --color-fondo, --color-card, --color-borde, --color-primario,
+   --color-secundario, --color-texto, --color-texto-suave,
+   --sombra, --transicion
+============================================================ */
+
+
+/* ====
+   FONDO CON PATRÓN — Fondo de la página con gradientes radiales decorativos
+==== */
+
+/* El fondo usa el color base definido en variables, más dos gradientes radiales
+   circulares semitransparentes: uno morado en la esquina superior izquierda
+   y uno cyan en la esquina inferior derecha. Crean profundidad visual sutil. */
 body {
     background: var(--color-fondo);
     background-image:
@@ -6,7 +24,14 @@ body {
         radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
 }
 
-/* CARD */
+
+/* ====
+   CARD — Tarjeta central que contiene el formulario
+==== */
+
+/* Contenedor principal del formulario de login/registro.
+   Ancho fijo de 380px, centrado horizontalmente con margin auto.
+   Bordes redondeados, sombra y borde suave para efecto de tarjeta flotante. */
 .card {
     width: 380px;
     margin: 40px auto 60px;
@@ -17,6 +42,8 @@ body {
     border: 1px solid var(--color-borde);
 }
 
+/* Título principal de la card (ej: "Iniciar sesión", "Crear cuenta").
+   Fuente monoespaciada Space Mono para identidad visual del proyecto. */
 .card h2 {
     font-family: 'Space Mono', monospace;
     font-size: 22px;
@@ -25,17 +52,26 @@ body {
     color: var(--color-texto);
 }
 
+/* Subtítulo debajo del título principal.
+   Color suave para crear jerarquía visual sin competir con el título. */
 .card .subtitulo {
     font-size: 13px;
     color: var(--color-texto-suave);
     margin-bottom: 24px;
 }
 
-/* GRUPOS DE INPUT */
+
+/* ====
+   GRUPOS DE INPUT — Contenedor de cada campo del formulario
+==== */
+
+/* Agrupa el label con su input correspondiente.
+   El margen inferior separa visualmente cada campo del siguiente. */
 .grupo {
     margin-bottom: 16px;
 }
 
+/* Etiqueta de cada campo: negrita, tamaño pequeño, color oscuro. */
 .grupo label {
     display: block;
     font-size: 13px;
@@ -44,6 +80,9 @@ body {
     margin-bottom: 6px;
 }
 
+/* Estilo unificado para todos los tipos de input y select.
+   Fondo gris muy claro (#fafafa), borde suave, fuente DM Sans.
+   appearance: none elimina el estilo nativo del navegador en select. */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -57,9 +96,11 @@ select {
     color: var(--color-texto);
     background: #fafafa;
     transition: border-color var(--transicion), box-shadow var(--transicion);
-    appearance: none;
+    appearance: none; /* Elimina estilos nativos del navegador */
 }
 
+/* Al hacer focus en cualquier input o select:
+   borde morado, fondo blanco y sombra exterior azul translúcida. */
 input:focus, select:focus {
     outline: none;
     border-color: var(--color-primario);
@@ -67,11 +108,18 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-/* SELECT CUSTOM */
+
+/* ====
+   SELECT CUSTOM — Flecha personalizada para el elemento select
+==== */
+
+/* Contenedor relativo para posicionar la flecha personalizada. */
 .select-wrapper {
     position: relative;
 }
 
+/* Flecha "▾" generada con pseudoelemento, posicionada a la derecha del select.
+   pointer-events: none evita que intercepte los clics del usuario. */
 .select-wrapper::after {
     content: "▾";
     position: absolute;
@@ -83,13 +131,21 @@ input:focus, select:focus {
     font-size: 14px;
 }
 
-/* CHIPS DE ROL */
+
+/* ====
+   CHIPS DE ROL — Selector visual de rol (Estudiante / Docente)
+==== */
+
+/* Contenedor de los chips de rol, distribuidos en fila con separación. */
 .rol-opciones {
     display: flex;
     gap: 10px;
     margin-top: 4px;
 }
 
+/* Chip individual de rol.
+   flex: 1 hace que ambos chips ocupen el mismo ancho disponible.
+   Borde suave, fondo gris claro, texto centrado con emoji arriba. */
 .rol-chip {
     flex: 1;
     padding: 10px 12px;
@@ -106,36 +162,49 @@ input:focus, select:focus {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    user-select: none;
+    user-select: none; /* Evita que el texto se seleccione al hacer clic */
 }
 
+/* Emoji grande dentro del chip para identificar visualmente el rol. */
 .rol-chip .emoji {
     font-size: 22px;
 }
 
+/* Al pasar el mouse sobre un chip: borde y texto cambian a color primario. */
 .rol-chip:hover {
     border-color: var(--color-primario);
     color: var(--color-primario);
     background: rgba(79, 70, 229, 0.04);
 }
 
+/* Cuando el chip está seleccionado (clase .activo añadida por JS):
+   borde morado más visible y fondo morado translúcido. */
 .rol-chip.activo {
     border-color: var(--color-primario);
     color: var(--color-primario);
     background: rgba(79, 70, 229, 0.08);
 }
 
+/* El input hidden que guarda el valor del rol seleccionado no se muestra. */
 input[type="hidden"] { display: none; }
 
-/* PASSWORD */
+
+/* ====
+   PASSWORD — Campo de contraseña con botón para mostrar/ocultar
+==== */
+
+/* Contenedor relativo para posicionar el ícono del ojo dentro del input. */
 .password-box {
     position: relative;
 }
 
+/* Padding derecho extra para que el texto no quede debajo del ícono del ojo. */
 .password-box input {
     padding-right: 44px;
 }
 
+/* Ícono del ojo (👁) posicionado absolutamente a la derecha del input.
+   Al hacer clic llama a togglePassword() en el JS para mostrar/ocultar. */
 .ver {
     position: absolute;
     right: 12px;
@@ -148,9 +217,16 @@ input[type="hidden"] { display: none; }
     line-height: 1;
 }
 
+/* Al pasar el mouse sobre el ojo, cambia a color primario. */
 .ver:hover { color: var(--color-primario); }
 
-/* RECORDARME */
+
+/* ====
+   RECORDARME — Checkbox de "Recordar sesión"
+==== */
+
+/* Contenedor del checkbox con su label.
+   Distribuido en fila con gap y texto pequeño en color suave. */
 .opciones {
     display: flex;
     align-items: center;
@@ -161,6 +237,7 @@ input[type="hidden"] { display: none; }
     cursor: pointer;
 }
 
+/* Checkbox con tamaño fijo y color de acento primario al estar marcado. */
 .opciones input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -168,7 +245,13 @@ input[type="hidden"] { display: none; }
     cursor: pointer;
 }
 
-/* BOTÓN PRINCIPAL */
+
+/* ====
+   BOTÓN PRINCIPAL — Botón de acción principal del formulario
+==== */
+
+/* Botón de ancho completo con fondo morado y texto blanco.
+   Al hover sube 1px y agrega sombra morada para efecto de elevación. */
 .btn-primario {
     width: 100%;
     padding: 13px;
@@ -191,9 +274,17 @@ input[type="hidden"] { display: none; }
     box-shadow: 0 4px 16px rgba(79, 70, 229, 0.3);
 }
 
+/* Al hacer clic (active), vuelve a su posición original sin elevación. */
 .btn-primario:active { transform: translateY(0); }
 
-/* DIVISOR */
+
+/* ====
+   DIVISOR — Separador visual "─── o ───" entre secciones
+==== */
+
+/* Texto centrado con dos líneas horizontales a los lados generadas
+   con pseudoelementos ::before y ::after. Cada línea ocupa el 42%
+   del ancho disponible, centradas verticalmente con el texto. */
 .divisor {
     text-align: center;
     font-size: 12px;
@@ -211,10 +302,19 @@ input[type="hidden"] { display: none; }
     background: var(--color-borde);
 }
 
+/* Línea izquierda del divisor. */
 .divisor::before { left: 0; }
+
+/* Línea derecha del divisor. */
 .divisor::after { right: 0; }
 
-/* LINKS Y TEXTO */
+
+/* ====
+   LINKS Y TEXTO — Navegación entre páginas (login ↔ registro)
+==== */
+
+/* Link genérico centrado debajo del formulario.
+   Usado para "¿Olvidaste tu contraseña?" u otros enlaces secundarios. */
 .link {
     display: block;
     text-align: center;
@@ -228,6 +328,8 @@ input[type="hidden"] { display: none; }
 
 .link:hover { color: var(--color-secundario); text-decoration: underline; }
 
+/* Texto de navegación al final de la card.
+   Ej: "¿Ya tienes cuenta? Iniciar sesión" o "¿No tienes cuenta? Regístrate" */
 .registro {
     text-align: center;
     font-size: 13px;
@@ -235,6 +337,7 @@ input[type="hidden"] { display: none; }
     margin-top: 16px;
 }
 
+/* Enlace dentro del texto de navegación: morado y en negrita. */
 .registro a {
     color: var(--color-primario);
     font-weight: 700;
