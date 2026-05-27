@@ -39,12 +39,12 @@ cd VectoFlow/Vecto-Flow/pjc
 npm install
 
 # 4. Configurar variables de entorno
-# Crear archivo .env con:
-# DB_HOST=localhost
-# DB_USER=root
-# DB_PASSWORD=tu_password
-# DB_NAME=vectoflow
-# JWT_SECRET=tu_clave_secreta
+    - # Crear archivo .env con:
+    -# DB_HOST=localhost
+    -# DB_USER=root
+    -# DB_PASSWORD=tu_password
+    -# DB_NAME=vectoflow
+    -# JWT_SECRET=tu_clave_secreta
 
 # 5. Ejecutar el servidor
 node server.js
