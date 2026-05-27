@@ -170,12 +170,44 @@ function verTablaCompleta() {
  * Agrega el resultado actual al historial de sumas en localStorage.
  * Usa unshift() para que la operación más reciente quede primero.
  * El historial es un array de objetos resultadoActual. */
-function guardarEnHistorial() {
+async function guardarEnHistorial() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
 
+    // Guarda en localStorage como respaldo local
     const historial = JSON.parse(localStorage.getItem('historial_sumas') || '[]');
     historial.unshift(resultadoActual);
     localStorage.setItem('historial_sumas', JSON.stringify(historial));
 
-    alert('✅ Operación guardada en tu historial.');
+    // Guarda en la base de datos
+    const token = localStorage.getItem('token');
+    if (!token) {
+        alert('⚠️ No hay sesión activa. Solo se guardó localmente.');
+        return;
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/vectores/guardar-suma', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                vectores: resultadoActual.vectores,
+                resultado: resultadoActual.resultado,
+                dim: resultadoActual.dim
+            })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert(data.mensaje);
+        } else {
+            alert('⚠️ Se guardó localmente pero hubo un error en el servidor: ' + data.error);
+        }
+    } catch (err) {
+        console.error(err);
+        alert('⚠️ Sin conexión al servidor. Se guardó solo localmente.');
+    }
 }

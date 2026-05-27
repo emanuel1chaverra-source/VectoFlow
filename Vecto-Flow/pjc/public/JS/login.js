@@ -5,7 +5,7 @@
  */
 
 
-// Alterna el campo de contraseña entre texto visible y oculto (••••••)
+// Alterna el campo de contraseña entre texto visible y oculto (••••)
 function togglePassword() {
     const input = document.getElementById('password');
     input.type = input.type === 'password' ? 'text' : 'password';
@@ -55,8 +55,15 @@ async function login() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('sesion', JSON.stringify(data.usuario));
 
-        // Redirige según el rol: 3 = Docente, cualquier otro = Estudiante
-        if (data.usuario.rol === 3) {
+        // ─────────────────────────────────────────────
+        // Redirige según el rol del usuario:
+        //   rol === 1 → Administrador → panel de gestión de usuarios
+        //   rol === 3 → Docente       → dashboard del docente
+        //   cualquier otro (rol 2)    → Estudiante → dashboard del estudiante
+        // ─────────────────────────────────────────────
+        if (data.usuario.rol === 1) {
+            window.location.href = 'admin.html';          // ← NUEVO: Panel Admin
+        } else if (data.usuario.rol === 3) {
             window.location.href = 'dashboard-docente.html';
         } else {
             window.location.href = 'dashboard-estudiante.html';

@@ -69,7 +69,7 @@
                 <!-- Input de contraseña con mínimo de 6 caracteres (validado por el JS) -->
                 <input type="password" id="password" placeholder="Mínimo 6 caracteres">
                 <!-- Ícono del ojo: al hacer clic llama a togglePassword() en registro.js
-                     para alternar entre type="password" y type="text" -->
+                    para alternar entre type="password" y type="text" -->
                 <span class="ver" onclick="togglePassword()">👁</span>
             </div>
         </div>
@@ -80,13 +80,13 @@
         <div class="grupo">
             <label>¿Cuál es tu rol?</label>
 
-            <!-- Contenedor de los dos chips de rol (Estudiante y Docente).
+            <!-- Contenedor de chips de rol (Estudiante, Docente y Admin).
                  Distribuidos en fila con igual ancho gracias a flex: 1 en login.css. -->
             <div class="rol-opciones">
 
                 <!-- Chip de Estudiante: al hacer clic llama a seleccionarRol('estudiante', this)
-                     en registro.js que agrega la clase .activo a este chip y guarda el valor
-                     en el input hidden #rol. -->
+                    en registro.js que agrega la clase .activo a este chip y guarda el valor
+                    en el input hidden #rol. -->
                 <div class="rol-chip" onclick="seleccionarRol('estudiante', this)">
                     <span class="emoji">🎓</span>
                     Estudiante
@@ -97,9 +97,16 @@
                     <span class="emoji">📋</span>
                     Docente
                 </div>
+
+                <!-- Chip de Administrador — NUEVO (rol 1) -->
+                <div class="rol-chip" onclick="seleccionarRol('admin', this)">
+                    <span class="emoji">🛡️</span>
+                    Admin
+                </div>
+
             </div>
 
-            <!-- Input oculto que almacena el rol seleccionado ('estudiante' o 'docente').
+            <!-- Input oculto que almacena el rol seleccionado ('estudiante', 'docente' o 'admin').
                  El JS lo lee al enviar el formulario para incluirlo en el body del fetch. -->
             <input type="hidden" id="rol" value="">
         </div>

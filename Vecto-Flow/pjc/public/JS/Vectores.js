@@ -22,8 +22,8 @@ function generarCeldas(nombre, dim) {
     const contenedor = document.getElementById(`celdas-${nombre}`);
     contenedor.innerHTML = '';
 
-    if (!n || n < 1 || n > 10) {
-        contenedor.innerHTML = '<span class="placeholder-celdas">Dimensión inválida (1–10)</span>';
+    if (!n || n < 1 || n > 5) {
+        contenedor.innerHTML = '<span class="placeholder-celdas">Dimensión inválida (1–5)</span>';
         return;
     }
 
@@ -63,8 +63,8 @@ function generarCeldasExtra(id, nombre, dim) {
     const contenedor = document.getElementById(`celdas-${id}`);
     contenedor.innerHTML = '';
 
-    if (!n || n < 1 || n > 10) {
-        contenedor.innerHTML = '<span class="placeholder-celdas">Dimensión inválida (1–10)</span>';
+    if (!n || n < 1 || n > 5) {
+        contenedor.innerHTML = '<span class="placeholder-celdas">Dimensión inválida (1–5)</span>';
         return;
     }
 

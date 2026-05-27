@@ -1,13 +1,13 @@
 /*
  * registro.js — Lógica del formulario de registro de usuarios
- * -------------------------------------------------------------
+ * ----
  * Maneja la selección de rol, visibilidad de contraseña,
  * mensajes de feedback y el envío del formulario a la API.
  */
 
 
-/* ── seleccionarRol(rol, chip) ─────────────────────────────────
- * Gestiona la selección visual del rol (Estudiante / Docente).
+/* ── seleccionarRol(rol, chip) ────
+ * Gestiona la selección visual del rol (Estudiante / Docente / Admin).
  * Quita la clase 'activo' de todos los chips y se la aplica
  * al seleccionado. Luego guarda el valor del rol en el input
  * oculto #rol para que esté disponible al enviar el formulario. */
@@ -18,14 +18,14 @@ function seleccionarRol(rol, chip) {
 }
 
 
-// Alterna el campo de contraseña entre texto visible y oculto (••••••)
+// Alterna el campo de contraseña entre texto visible y oculto (••••)
 function togglePassword() {
     const input = document.getElementById('password');
     input.type = input.type === 'password' ? 'text' : 'password';
 }
 
 
-/* ── mostrarMsg(tipo, texto) ───────────────────────────────────
+/* ── mostrarMsg(tipo, texto) ────
  * Oculta ambos mensajes (error y éxito) y luego muestra
  * solo el que corresponde al tipo indicado ('error' o 'exito').
  * Centraliza el manejo de feedback visual del formulario. */
@@ -39,7 +39,7 @@ function mostrarMsg(tipo, texto) {
 }
 
 
-/* ── registrar() ───────────────────────────────────────────────
+/* ── registrar() ────
  * Función principal: valida los campos del formulario y envía
  * los datos al endpoint de registro de la API.
  *
@@ -49,7 +49,7 @@ function mostrarMsg(tipo, texto) {
  *   3. Se debe seleccionar un rol.
  *
  * Si todo es válido, convierte el rol a su FK numérica
- * (docente → 3, estudiante → 2) y hace el POST al backend.
+ * (admin → 1, docente → 3, estudiante → 2) y hace el POST al backend.
  * En caso de éxito, muestra un mensaje y redirige al login. */
 async function registrar() {
     const nombre   = document.getElementById('nombre').value.trim();
@@ -72,12 +72,13 @@ async function registrar() {
 
     // Validación: rol seleccionado
     if (!rol) {
-        mostrarMsg('error', 'Selecciona tu rol: Estudiante o Docente.');
+        mostrarMsg('error', 'Selecciona tu rol: Estudiante, Docente o Admin.');
         return;
     }
 
     // Convierte el rol string a su clave foránea numérica para la BD
-    const fkRol = rol === 'docente' ? 3 : 2;
+    // admin → 1 | docente → 3 | estudiante → 2
+    const fkRol = rol === 'admin' ? 1 : rol === 'docente' ? 3 : 2;
 
     try {
         // Envía los datos del nuevo usuario al backend

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador – VectoFlow</title>
+
+    <!-- ✅ AGREGADO: style.css global con las variables CSS (colores, fuentes, fondo) -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- Hoja de estilos del panel administrativo -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+    <!-- ────
+         NAVBAR — Barra de navegación superior
+    ──── -->
+    <nav class="navbar">
+        <!-- ✅ CORREGIDO: usa .logo-nav igual que el dashboard de estudiante -->
+        <div class="logo-nav">Vecto<span>Flow</span></div>
+        <div class="user-info">
+            <!-- Avatar con inicial (generado por admin.js) -->
+            <div class="avatar" id="avatar-inicial">A</div>
+            <div>
+                <!-- ✅ CORREGIDO: usa .nombre-usuario y .rol-badge igual que estudiante -->
+                <div class="nombre-usuario" id="nombre-display">Admin</div>
+                <div class="rol-badge" style="background: rgba(233,69,96,0.1); color: #e94560;">ADMIN</div>
+            </div>
+            <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+        </div>
+    </nav>
+
+    <!-- ────
+         CONTENIDO PRINCIPAL
+    ──── -->
+    <main class="container">
+
+        <!-- ✅ AGREGADO: Banner de bienvenida igual al de estudiante -->
+        <div class="bienvenida">
+            <h2>🛡️ Panel de Administración</h2>
+            <p>Gestiona los usuarios registrados en la plataforma.</p>
+        </div>
+
+        <h2>Gestión de Usuarios</h2>
+        <p class="subtitulo">Administra los usuarios registrados en la plataforma.</p>
+
+        <div class="acciones-top">
+            <button class="btn-primary" onclick="abrirModalCrear()">+ Nuevo Usuario</button>
+        </div>
+
+        <div class="tabla-wrapper">
+            <table class="tabla-usuarios">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Registro</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-usuarios">
+                    <tr>
+                        <td colspan="7" class="loading">Cargando usuarios...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- ────  MODAL — Editar Usuario  ──── -->
+    <div class="modal-overlay" id="modal-editar" style="display:none;">
+        <div class="modal">
+            <h3>✏️ Editar Usuario</h3>
+            <input type="hidden" id="edit-id">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="edit-nombre" placeholder="Nombre">
+            </div>
+            <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" id="edit-apellido" placeholder="Apellido">
+            </div>
+            <div class="form-group">
+                <label>Correo</label>
+                <input type="email" id="edit-correo" placeholder="Correo">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select id="edit-rol">
+                    <option value="1">Administrador</option>
+                    <option value="2">Estudiante</option>
+                    <option value="3">Docente</option>
+                </select>
+            </div>
+            <p id="msg-modal" class="msg-modal"></p>
+            <div class="modal-botones">
+                <button class="btn-primary" onclick="guardarEdicion()">Guardar</button>
+                <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ────  MODAL — Crear Usuario  ──── -->
+    <div class="modal-overlay" id="modal-crear" style="display:none;">
+        <div class="modal">
+            <h3>➕ Nuevo Usuario</h3>
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" id="crear-nombre" placeholder="Nombre">
+            </div>
+            <div class="form-group">
+                <label>Apellido</label>
+                <input type="text" id="crear-apellido" placeholder="Apellido">
+            </div>
+            <div class="form-group">
+                <label>Correo</label>
+                <input type="email" id="crear-correo" placeholder="Correo">
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="crear-password" placeholder="Contraseña">
+            </div>
+            <div class="form-group">
+                <label>Rol</label>
+                <select id="crear-rol">
+                    <option value="2">Estudiante</option>
+                    <option value="3">Docente</option>
+                    <option value="1">Administrador</option>
+                </select>
+            </div>
+            <p id="msg-crear" class="msg-modal"></p>
+            <div class="modal-botones">
+                <button class="btn-primary" onclick="crearUsuario()">Crear</button>
+                <button class="btn-secondary" onclick="cerrarModalCrear()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../JS/admin.js"></script>
+</body>
+</html>

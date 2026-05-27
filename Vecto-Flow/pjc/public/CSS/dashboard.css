@@ -1,22 +1,6 @@
-/* ============================================================
-   ARCHIVO: dashboard.css
-   DESCRIPCIÓN: Estilos reutilizables del dashboard de VectoFlow.
-   Aplica a: navbar, cards, botones, paneles, tablas, inputs y footer.
-   Depende de variables CSS globales definidas en style.css como:
-   --color-primario, --color-acento, --color-borde, --color-texto,
-   --color-texto-suave, --color-error, --color-exito,
-   --color-vector-a, --color-vector-b, --color-vector-c,
-   --sombra, --sombra-hover, --transicion
-============================================================ */
-
-
 /* ====
-   NAVBAR — Barra de navegación superior fija
+   NAVBAR
 ==== */
-
-/* Contenedor principal de la navbar.
-   Usa flexbox para distribuir logo, menú e info de usuario en una fila.
-   Permanece fija en la parte superior al hacer scroll (sticky). */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -27,11 +11,9 @@
     box-shadow: 0 1px 8px rgba(0,0,0,0.04);
     position: sticky;
     top: 0;
-    z-index: 100; /* Se mantiene por encima de otros elementos */
+    z-index: 100;
 }
 
-/* Logo "VectoFlow" en la navbar.
-   Usa fuente monoespaciada Space Mono para identidad visual. */
 .logo-nav {
     font-family: 'Space Mono', monospace;
     font-weight: 700;
@@ -40,20 +22,14 @@
     letter-spacing: -0.5px;
 }
 
-/* La palabra "Flow" del logo se colorea con el color acento (cyan)
-   para diferenciarla visualmente de "Vecto" */
 .logo-nav span { color: var(--color-acento); }
 
-/* Contenedor de los enlaces del menú de navegación.
-   Distribuye los links horizontalmente con separación de 6px. */
 .menu {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-/* Estilo base de cada enlace del menú.
-   Sin subrayado, color suave, con transición animada al interactuar. */
 .menu a {
     text-decoration: none;
     color: var(--color-texto-suave);
@@ -64,23 +40,17 @@
     transition: all var(--transicion);
 }
 
-/* Al pasar el mouse o cuando el enlace está activo (página actual),
-   cambia a color primario con fondo morado muy translúcido. */
 .menu a:hover, .menu a.activo {
     color: var(--color-primario);
     background: rgba(79, 70, 229, 0.08);
 }
 
-/* Contenedor del avatar, nombre y rol del usuario logueado.
-   Alineado horizontalmente con separación de 10px. */
 .user-info {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-/* Círculo que muestra las iniciales del usuario.
-   Fondo con gradiente morado, texto blanco centrado. */
 .avatar {
     width: 34px;
     height: 34px;
@@ -94,15 +64,12 @@
     font-size: 13px;
 }
 
-/* Nombre del usuario logueado, pequeño y en negrita. */
 .nombre-usuario {
     font-size: 13px;
     font-weight: 600;
     color: var(--color-texto);
 }
 
-/* Etiqueta que muestra el rol del usuario (Estudiante o Docente).
-   Estilo base: texto pequeño en mayúsculas con bordes redondeados. */
 .rol-badge {
     font-size: 11px;
     font-weight: 700;
@@ -112,20 +79,16 @@
     letter-spacing: 0.5px;
 }
 
-/* Variante del badge para rol Estudiante: fondo morado claro. */
 .rol-badge.estudiante {
     background: rgba(79, 70, 229, 0.1);
     color: var(--color-primario);
 }
 
-/* Variante del badge para rol Docente: fondo cyan claro. */
 .rol-badge.docente {
     background: rgba(6, 182, 212, 0.1);
     color: #0891b2;
 }
 
-/* Botón de cerrar sesión.
-   Sin fondo, con borde rojo suave. Al hacer hover se rellena de rojo muy claro. */
 .btn-logout {
     background: none;
     border: 1.5px solid #fecaca;
@@ -145,26 +108,18 @@
     background: #fef2f2;
 }
 
-
 /* ====
-   LAYOUT PRINCIPAL — Contenedor del contenido de la página
+   LAYOUT PRINCIPAL
 ==== */
-
-/* Área principal de contenido.
-   Centrada con ancho máximo de 1100px y padding lateral/superior. */
 main {
     padding: 28px 30px;
     max-width: 1100px;
     margin: 0 auto;
 }
 
-
 /* ====
-   BIENVENIDA — Tarjeta de saludo al usuario
+   BIENVENIDA
 ==== */
-
-/* Tarjeta de bienvenida con gradiente de morado a cyan.
-   Tiene dos círculos decorativos generados con pseudoelementos ::before y ::after. */
 .bienvenida {
     background: linear-gradient(135deg, var(--color-primario) 0%, #6d67f0 50%, var(--color-acento) 100%);
     padding: 28px 32px;
@@ -172,10 +127,9 @@ main {
     margin-bottom: 28px;
     color: white;
     position: relative;
-    overflow: hidden; /* Oculta los círculos decorativos que salen del borde */
+    overflow: hidden;
 }
 
-/* Círculo decorativo superior derecho (semitransparente). */
 .bienvenida::before {
     content: "";
     position: absolute;
@@ -187,7 +141,6 @@ main {
     border-radius: 50%;
 }
 
-/* Círculo decorativo inferior derecho (más grande y más transparente). */
 .bienvenida::after {
     content: "";
     position: absolute;
@@ -199,7 +152,6 @@ main {
     border-radius: 50%;
 }
 
-/* Título principal de la bienvenida en fuente monoespaciada. */
 .bienvenida h2 {
     font-family: 'Space Mono', monospace;
     font-size: 22px;
@@ -207,19 +159,14 @@ main {
     margin-bottom: 4px;
 }
 
-/* Subtítulo con opacidad reducida para crear jerarquía visual. */
 .bienvenida p {
     opacity: 0.85;
     font-size: 14px;
 }
 
-
 /* ====
-   CARDS DE MÓDULOS — Tarjetas de acceso a cada sección
+   CARDS DE MÓDULOS
 ==== */
-
-/* Grid responsivo que acomoda las tarjetas automáticamente.
-   Cada tarjeta tiene un mínimo de 220px de ancho. */
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -227,8 +174,6 @@ main {
     margin-bottom: 28px;
 }
 
-/* Tarjeta individual de módulo.
-   Al hacer hover se eleva 4px con sombra más pronunciada (efecto flotante). */
 .card-modulo {
     background: white;
     border: 1px solid var(--color-borde);
@@ -249,14 +194,12 @@ main {
     border-color: rgba(79, 70, 229, 0.2);
 }
 
-/* Ícono/emoji grande en la parte superior de la tarjeta. */
 .card-modulo .icono-modulo {
     font-size: 32px;
     margin-bottom: 10px;
     display: block;
 }
 
-/* Título de la tarjeta de módulo. */
 .card-modulo h3 {
     font-size: 15px;
     font-weight: 700;
@@ -264,20 +207,15 @@ main {
     color: var(--color-texto);
 }
 
-/* Descripción corta debajo del título. */
 .card-modulo p {
     font-size: 12px;
     color: var(--color-texto-suave);
     line-height: 1.4;
 }
 
-
 /* ====
-   BOTONES GENERALES — Estilos base y variantes
+   BOTONES GENERALES
 ==== */
-
-/* Clase base para todos los botones.
-   Usa flexbox para alinear ícono + texto. */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -293,8 +231,6 @@ main {
     text-decoration: none;
 }
 
-/* Botón principal: fondo morado, texto blanco.
-   Al hover sube ligeramente y agrega sombra morada. */
 .btn-primario {
     background: var(--color-primario);
     color: white;
@@ -306,8 +242,6 @@ main {
     box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
 }
 
-/* Botón secundario: fondo blanco con borde morado.
-   Al hover fondo morado muy translúcido. */
 .btn-secundario {
     background: white;
     color: var(--color-primario);
@@ -318,7 +252,6 @@ main {
     background: rgba(79, 70, 229, 0.05);
 }
 
-/* Botón de éxito: fondo verde para confirmar acciones positivas. */
 .btn-exito {
     background: var(--color-exito);
     color: white;
@@ -329,7 +262,6 @@ main {
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
-/* Botón de peligro: fondo blanco con borde rojo para acciones destructivas. */
 .btn-peligro {
     background: white;
     color: var(--color-error);
@@ -338,12 +270,9 @@ main {
 
 .btn-peligro:hover { background: #fef2f2; }
 
-
 /* ====
-   SECCIONES / PANELES — Contenedores de secciones del dashboard
+   SECCIONES / PANELES
 ==== */
-
-/* Panel genérico: tarjeta blanca con borde, sombra y bordes redondeados. */
 .panel {
     background: white;
     border: 1px solid var(--color-borde);
@@ -353,8 +282,6 @@ main {
     margin-bottom: 20px;
 }
 
-/* Encabezado del panel: título a la izquierda, acción a la derecha.
-   Separado del contenido por un borde inferior. */
 .panel-header {
     display: flex;
     justify-content: space-between;
@@ -364,7 +291,6 @@ main {
     border-bottom: 1px solid var(--color-borde);
 }
 
-/* Título del panel en fuente monoespaciada. */
 .panel-titulo {
     font-family: 'Space Mono', monospace;
     font-size: 16px;
@@ -372,13 +298,9 @@ main {
     color: var(--color-texto);
 }
 
-
 /* ====
-   INPUTS EN DASHBOARD — Campos de texto estilizados
+   INPUTS EN DASHBOARD
 ==== */
-
-/* Campo de texto base: fondo gris muy claro, borde suave.
-   Al hacer focus resalta con borde morado y sombra exterior azul. */
 .input-field {
     width: 100%;
     padding: 10px 14px;
@@ -398,20 +320,15 @@ main {
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
 }
 
-/* Variante pequeña del input (80px de ancho), centrada.
-   Usada para ingresar valores individuales de cada posición del vector. */
 .input-small {
     width: 80px;
     text-align: center;
 }
 
-/* Agrupa un label con su input correspondiente, con margen inferior. */
 .form-grupo {
     margin-bottom: 14px;
 }
 
-/* Etiqueta del campo: texto pequeño en mayúsculas y color suave
-   para crear jerarquía visual sin competir con el input. */
 .form-grupo label {
     display: block;
     font-size: 12px;
@@ -422,26 +339,21 @@ main {
     margin-bottom: 6px;
 }
 
-
 /* ====
-   TABLAS — Visualización de datos en filas y columnas
+   TABLAS
 ==== */
-
-/* Contenedor con scroll horizontal para tablas en pantallas pequeñas. */
 .tabla-wrapper {
     overflow-x: auto;
     border-radius: 10px;
     border: 1px solid var(--color-borde);
 }
 
-/* Tabla sin bordes separados entre celdas. */
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-/* Encabezados de columna: fondo morado, texto blanco en mayúsculas. */
 thead th {
     padding: 12px 16px;
     text-align: left;
@@ -455,42 +367,29 @@ thead th {
 
 thead th:first-child { border-radius: 0; }
 
-/* La última fila no tiene borde inferior para evitar doble borde. */
 tbody tr:last-child td { border-bottom: none; }
 
-/* Celdas del cuerpo de la tabla con borde inferior suave entre filas. */
 tbody td {
     padding: 11px 16px;
     border-bottom: 1px solid var(--color-borde);
     color: var(--color-texto);
 }
 
-/* Fila resaltada levemente al pasar el mouse. */
 tbody tr:hover { background: rgba(79, 70, 229, 0.02); }
 
-/* Colores diferenciados para cada vector en la tabla:
-   .col-a → Vector A (color definido en variables)
-   .col-b → Vector B
-   .col-c → Vector C (resultado)
-   Usan fuente monoespaciada para alinear números correctamente. */
+/* COLORES VECTORES EN TABLA */
 .col-a { color: var(--color-vector-a); font-weight: 700; font-family: 'Space Mono', monospace; }
 .col-b { color: var(--color-vector-b); font-weight: 700; font-family: 'Space Mono', monospace; }
 .col-c { color: var(--color-vector-c); font-weight: 700; font-family: 'Space Mono', monospace; }
 
-/* Encabezados de columna con el color de fondo de cada vector. */
 th.col-a { background: var(--color-vector-a); }
 th.col-b { background: var(--color-vector-b); }
 th.col-c { background: var(--color-vector-c); }
-
-/* Encabezado de la columna de índice en gris oscuro. */
 th.col-idx { background: #475569; }
 
-
 /* ====
-   FOOTER — Pie de página
+   FOOTER
 ==== */
-
-/* Pie de página centrado con borde superior y texto en color suave. */
 footer {
     text-align: center;
     padding: 20px;
@@ -498,4 +397,200 @@ footer {
     color: var(--color-texto-suave);
     font-size: 13px;
     border-top: 1px solid var(--color-borde);
+}
+
+
+/* ============================================================
+   ADMIN PANEL — Estilos exclusivos del panel de administración
+   Agregados para: admin.html | admin.js
+   Trazabilidad: HU-024 | RF-024 | RNF-10 | RNF-12
+   ============================================================ */
+
+/* Contenedor principal del panel admin */
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.container h2 {
+    font-size: 1.6rem;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+}
+
+/* Subtítulo descriptivo debajo del h2 */
+.subtitulo {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Contenedor del botón "Nuevo Usuario" */
+.acciones-top {
+    margin-bottom: 16px;
+}
+
+/* ─── Botones del panel admin (no sobreescriben .btn original) ─── */
+
+/* Botón primario del admin — rojo VectoFlow */
+.btn-primary {
+    background: #e94560;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-primary:hover { background: #c73652; }
+
+/* Botón secundario del admin — gris neutro para cancelar */
+.btn-secondary {
+    background: #ccc;
+    color: #333;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover { background: #bbb; }
+
+/* Botones de acción dentro de la tabla (Editar / Desactivar / Activar) */
+.btn-accion {
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin: 2px;
+    transition: opacity 0.2s;
+}
+
+.btn-accion:hover { opacity: 0.8; }
+
+.btn-accion.editar     { background: #3a86ff; color: white; }
+.btn-accion.desactivar { background: #ff6b6b; color: white; }
+.btn-accion.activar    { background: #51cf66; color: white; }
+
+/* ─── Tabla de usuarios del admin ─── */
+
+/* Tabla específica del admin con estilos propios */
+.tabla-usuarios {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-usuarios thead {
+    background: #1a1a2e;
+    color: white;
+}
+
+.tabla-usuarios th,
+.tabla-usuarios td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.tabla-usuarios tbody tr:nth-child(even) { background: #f8f9fa; }
+.tabla-usuarios tbody tr:hover { background: #eef2ff; }
+
+/* Celda de carga inicial */
+.loading {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+}
+
+/* ─── Badges de estado (activo / inactivo) ─── */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge.activo   { background: #d3f9d8; color: #2b8a3e; }
+.badge.inactivo { background: #ffe3e3; color: #c92a2a; }
+
+/* ─── Modales del panel admin ─── */
+
+/* Overlay semitransparente */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* Tarjeta blanca del modal */
+.modal {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 420px;
+    max-width: 95%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+
+.modal h3 {
+    margin-bottom: 20px;
+    color: #1a1a2e;
+}
+
+/* Grupo label + input en el modal */
+.form-group {
+    margin-bottom: 14px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #e94560;
+}
+
+/* Mensaje de retroalimentación dentro del modal */
+.msg-modal {
+    font-size: 0.85rem;
+    min-height: 20px;
+    margin-bottom: 10px;
+}
+
+/* Botones del modal alineados a la derecha */
+.modal-botones {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+    .navbar { flex-direction: column; gap: 10px; }
+    .tabla-usuarios th,
+    .tabla-usuarios td { padding: 8px 10px; }
 }
