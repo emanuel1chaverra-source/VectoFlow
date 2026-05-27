@@ -6,19 +6,20 @@
 Módulo de **Suma de Vectores** con gestión de usuarios, historial de operaciones y visualización paso a paso del proceso C[i] = A[i] + B[i].
 
 ## ¿Qué tablas cubre tu módulo?
-|Tipo  |Tabla|
-|Maestra|	roles|
-|Maestra|	usuarios|
-|Maestra|	dimension|
-|Maestra|	categorias_ejercicio|
-|Maestra|	vectores|
-|Transaccional|	detalle_vector|
-|Transaccional|	operaciones_suma|
-|Transaccional|	ejercicios|
-|Transaccional|	intentos_ejercicio|
-|Transaccional|	asignaciones|
-|Transaccional|	sesiones|
-|Transaccional|	metricas_desempeno|
+| Tipo |  | Tabla |
+|---| |---|
+|Maestra|	|roles|
+|Maestra|	|usuarios|
+|Maestra|	|dimension|
+|Maestra|	|categorias_ejercicio|
+|Maestra|	|vectores|
+|Transaccional|	|detalle_vector|
+|Transaccional|	|operaciones_suma|
+|Transaccional|	|ejercicios|
+|Transaccional|	|intentos_ejercicio|
+|Transaccional|	|asignaciones|
+|Transaccional|	|sesiones|
+|Transaccional|	|metricas_desempeno|
 
 ## ¿Qué framework elegiste y por qué?
 Node.js + Express.js
