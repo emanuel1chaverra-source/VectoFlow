@@ -36,3 +36,6 @@ npm install
 
 # 5. Ejecutar el servidor
 node server.js
+
+## ¿Cual es el repositorio de tu compañero?
+Mario Alberto Rodriguez y Emanuel Chaverra Marín manejamos un mismo repositorio, ya que los dos decidimos trabajar en equipo
