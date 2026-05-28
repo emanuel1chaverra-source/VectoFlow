@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<!--
+ * gestionar-sesiones.html — Gestión de sesiones del Docente
+ * ----------------------------------------------------------
+ * Permite al docente crear sesiones para estudiantes,
+ * ver el listado de sesiones activas/cerradas y cerrarlas.
+ * Trazabilidad: HU-018 | RF-018 | RNF-06
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Sesiones — VectoFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 999; opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .modal-overlay.activo { opacity: 1; pointer-events: all; }
+        .modal {
+            background: white; border-radius: 14px; padding: 30px;
+            width: 440px; max-width: 95%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            transform: translateY(-10px); transition: transform 0.2s ease;
+        }
+        .modal-overlay.activo .modal { transform: translateY(0); }
+        .modal h3 { font-family: 'Space Mono', monospace; font-size: 16px; margin-bottom: 20px; color: #1e293b; }
+        .form-grupo { margin-bottom: 14px; }
+        .form-grupo label { display: block; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .form-grupo select,
+        .form-grupo input {
+            width: 100%; padding: 10px 14px; border: 1.5px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+            background: #fafafa; color: #1e293b; transition: border-color 0.2s;
+        }
+        .form-grupo select:focus,
+        .form-grupo input:focus { outline: none; border-color: #4f46e5; background: white; }
+        .modal-botones { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+        .msg-modal { font-size: 13px; min-height: 18px; margin-bottom: 8px; color: #ef4444; }
+
+        /* ── BADGES ── */
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .badge-activa  { background: #d3f9d8; color: #2b8a3e; }
+        .badge-cerrada { background: #e2e8f0; color: #475569; }
+
+        /* ── TABLA ── */
+        .tabla-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        thead th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: white; background: #4f46e5; }
+        tbody td { padding: 11px 16px; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(79,70,229,0.02); }
+
+        /* ── BTN ACCION ── */
+        .btn-accion { border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
+        .btn-accion:hover { opacity: 0.8; }
+        .btn-cerrar { background: #fecaca; color: #ef4444; }
+
+        /* ── STATS ── */
+        .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 14px; }
+        .stat-icon { font-size: 28px; }
+        .stat-valor { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: #4f46e5; }
+        .stat-label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .loading, .empty { text-align: center; padding: 40px; color: #64748b; font-size: 14px; }
+        .empty span { font-size: 36px; display: block; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
+    <nav class="menu">
+        <a href="Dashboard-docente.html">🏠 Inicio</a>
+        <a href="crear-ejercicio.html">📝 Crear Ejercicio</a>
+        <a href="monitoreo-estudiantes.html">👥 Monitoreo</a>
+        <a href="gestionar-sesiones.html" class="activo">🕐 Sesiones</a>
+    </nav>
+    <div class="user-info">
+        <div class="avatar" id="avatar-inicial">D</div>
+        <div>
+            <div class="nombre-usuario" id="nombre-display">Docente</div>
+            <span class="rol-badge docente">Docente</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+</header>
+
+<main>
+
+    <!-- BIENVENIDA -->
+    <div class="bienvenida">
+        <h2>🕐 Gestionar Sesiones</h2>
+        <p>Crea y administra sesiones de acceso para tus estudiantes</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div>
+                <div class="stat-valor" id="totalSesiones">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <div>
+                <div class="stat-valor" id="sesionesActivas">0</div>
+                <div class="stat-label">Activas</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔒</div>
+            <div>
+                <div class="stat-valor" id="sesionesCerradas">0</div>
+                <div class="stat-label">Cerradas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL TABLA -->
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-titulo">📜 Listado de Sesiones</div>
+            <button class="btn btn-primario" onclick="abrirModal()" style="padding:8px 16px; font-size:13px;">
+                ➕ Nueva Sesión
+            </button>
+        </div>
+
+        <!-- FILTROS -->
+        <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+            <select id="filtroEstado" onchange="filtrar()" style="padding:8px 12px; border:1.5px solid #e2e8f0; border-radius:8px; font-size:13px; font-family:'DM Sans',sans-serif;">
+                <option value="">Todos los estados</option>
+                <option value="1">Activas</option>
+                <option value="0">Cerradas</option>
+            </select>
+        </div>
+
+        <div class="tabla-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>IP Acceso</th>
+                        <th>Dispositivo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaSesiones">
+                    <tr><td colspan="8" class="loading">⏳ Cargando sesiones...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<footer>VectoFlow © 2025 — Plataforma educativa para la suma de vectores</footer>
+
+<!-- ── MODAL CREAR SESIÓN ── -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h3>➕ Nueva Sesión</h3>
+
+        <div class="form-grupo">
+            <label>Estudiante *</label>
+            <select id="selectEstudiante">
+                <option value="">Cargando estudiantes...</option>
+            </select>
+        </div>
+
+        <div class="form-grupo">
+            <label>IP Acceso</label>
+            <input type="text" id="inputIP" placeholder="Ej: 192.168.1.1">
+        </div>
+
+        <div class="form-grupo">
+            <label>Dispositivo</label>
+            <input type="text" id="inputDispositivo" placeholder="Ej: Chrome - Windows">
+        </div>
+
+        <div class="msg-modal" id="msgModal"></div>
+
+        <div class="modal-botones">
+            <button class="btn btn-secundario" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn btn-primario" onclick="crearSesion()">Crear Sesión</button>
+        </div>
+    </div>
+</div>
+
+<script src="../js/dashboard.js"></script>
+<script src="../js/gestionar-sesiones.js"></script>

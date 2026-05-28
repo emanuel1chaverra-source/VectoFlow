@@ -12,13 +12,15 @@ const express = require('express');
 const router = express.Router();
 
 // Importa las funciones del controlador de autenticación y usuarios
-const { registrar, login, listarUsuarios, actualizarUsuario, desactivarUsuario }
-    = require('../controllers/authController');
+const { registrar, login, listarUsuarios, actualizarUsuario, desactivarUsuario, listarEstudiantes } 
+= require('../controllers/authController');
 
 // Importa los middlewares de seguridad:
 // verificarToken → valida el JWT en el header Authorization
 // soloAdmin      → permite acceso solo si FKRol = 1 (Administrador)
-const { verificarToken, soloAdmin } = require('../middlewares/authMiddleware');
+// soloDocente    → permite acceso solo si FKRol = 3 (Docente)
+const { verificarToken, soloAdmin, soloDocente } = require('../middlewares/authMiddleware');
+
 
 // ─────────────────────────────────────────────
 // RUTAS PÚBLICAS — No requieren autenticación
@@ -39,6 +41,10 @@ router.post('/login', login);
 // Flujo: petición → verificarToken → soloAdmin → controlador
 // ─────────────────────────────────────────────
 
+//RUTA: GET /api/auth/usuarios/estudiantes
+//Descripción: Retorna solo los usuarios con rol de estudiante (FKRol = 2)
+router.get('/usuarios/estudiantes', verificarToken, soloDocente, listarEstudiantes);
+
 // RUTA: GET /api/auth/usuarios
 // Descripción: Retorna todos los usuarios con JOIN a ROLES
 router.get('/usuarios', verificarToken, soloAdmin, listarUsuarios);
@@ -52,6 +58,7 @@ router.put('/usuarios/:id', verificarToken, soloAdmin, actualizarUsuario);
 // Descripción: Soft delete — alterna Estado entre 1 y 0 (no elimina)
 // Params: id (PKUsuario)
 router.delete('/usuarios/:id', verificarToken, soloAdmin, desactivarUsuario);
+
 
 // Exporta el router para que app.js lo monte bajo el prefijo /api/auth
 module.exports = router;

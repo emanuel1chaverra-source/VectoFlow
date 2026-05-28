@@ -39,6 +39,52 @@ app.use('/api/auth', require('./src/routes/authRoutes'));
 const vectoresRoutes = require('../pjc/src/routes/vectoresRoutes');
 app.use('/api/vectores', vectoresRoutes);
 
+// ─────────────────────────────────────────────────────────────
+// Rutas — Categorías de Ejercicio
+// Trazabilidad: HU-010 al HU-013 | RF-010 al RF-013
+// Registra las rutas REST para el CRUD de categorías.
+// Endpoint base: /api/categorias
+// ─────────────────────────────────────────────────────────────
+const categoriasRoutes = require('../pjc/src/routes/categoriasRoutes');
+
+// ─────────────────────────────────────────────────────────────
+// Rutas — Ejercicios
+// Trazabilidad: HU-014 al HU-017 | RF-014 al RF-017
+// Registra las rutas REST para el CRUD de ejercicios.
+// Endpoint base: /api/ejercicios
+// ─────────────────────────────────────────────────────────────
+const ejerciciosRoutes = require('../pjc/src/routes/ejerciciosRoutes');
+
+// Monta las rutas de categorías en el prefijo /api/categorias
+app.use('/api/categorias', categoriasRoutes);
+
+// Monta las rutas de ejercicios en el prefijo /api/ejercicios
+app.use('/api/ejercicios', ejerciciosRoutes);
+
+// Trazabilidad: HU-018 al HU-021 | RF-018 al RF-021
+const sesionesRoutes     = require('../pjc/src/routes/sesionesRoutes');
+// Trazabilidad: HU-022 al HU-025 | RF-022 al RF-025
+const asignacionesRoutes = require('../pjc/src/routes/asignacionesRoutes');
+// Trazabilidad: HU-026 al HU-029 | RF-026 al RF-029
+const intentosRoutes = require('../pjc/src/routes/intentosRouters');
+
+app.use('/api/sesiones',     sesionesRoutes);
+app.use('/api/asignaciones', asignacionesRoutes);
+app.use('/api/intentos',     intentosRoutes);
+
+
+const detalleVectorRoutes = require('../pjc/src/routes/detalleVectorRoutes');
+const operacionesRoutes   = require('../pjc/src/routes/operacionesRoutes');
+const metricasRoutes      = require('../pjc/src/routes/metricasRoutes');
+
+app.use('/api/detalle-vector', detalleVectorRoutes);
+app.use('/api/operaciones',    operacionesRoutes);
+app.use('/api/metricas',       metricasRoutes);
+
+app.use('/api', require('./src/routes/detalleVectorRoutes'));
+app.use('/api', require('./src/routes/operacionesRoutes'));
+app.use('/api', require('./src/routes/metricasRoutes'));
+
 // Ruta de prueba para verificar que la API está activa
 app.get('/api', (req, res) => {
     res.json({ mensaje: '✅ API VectoFlow funcionando' });

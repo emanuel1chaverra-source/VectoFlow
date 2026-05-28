@@ -200,6 +200,25 @@ const desactivarUsuario = async (req, res) => {
     }
 };
 
+// FUNCIÓN: listarEstudiantes
+// Método HTTP esperado: GET /api/usuarios/estudiantes
+// Acceso: Docente
+// Trazabilidad: HU-018 | RF-018
+const listarEstudiantes = async (req, res) => {
+    try {
+        const [rows] = await db.query(`
+            SELECT u.PKUsuario, u.Nombre, u.Apellido, u.Correo, u.Estado
+            FROM usuarios u
+            INNER JOIN roles r ON u.FKRol = r.PKRol
+            WHERE r.NombreRol = 'Estudiante'
+            ORDER BY u.Nombre ASC
+        `);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 
 // Exporta todas las funciones para que authRoutes.js pueda usarlas
-module.exports = { registrar, login, listarUsuarios, actualizarUsuario, desactivarUsuario };
+module.exports = { registrar, login, listarUsuarios, actualizarUsuario, desactivarUsuario, listarEstudiantes };

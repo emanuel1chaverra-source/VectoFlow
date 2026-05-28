@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Sesiones — VectoFlow</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primario: #4f46e5;
+            --color-secundario: #4338ca;
+            --color-acento: #06b6d4;
+            --color-exito: #10b981;
+            --color-error: #ef4444;
+            --color-texto: #1e293b;
+            --color-texto-suave: #64748b;
+            --color-borde: #e2e8f0;
+            --sombra: 0 1px 6px rgba(0,0,0,0.06);
+            --sombra-hover: 0 4px 18px rgba(0,0,0,0.1);
+            --transicion: 0.2s ease;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', sans-serif; background: #f8fafc; color: var(--color-texto); }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 30px; background: white;
+            border-bottom: 1px solid var(--color-borde);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo-nav { font-family: 'Space Mono', monospace; font-weight: 700; font-size: 18px; color: var(--color-primario); }
+        .logo-nav span { color: var(--color-acento); }
+        .menu { display: flex; align-items: center; gap: 6px; }
+        .menu a {
+            text-decoration: none; color: var(--color-texto-suave); font-weight: 500;
+            font-size: 14px; padding: 7px 14px; border-radius: 8px; transition: all var(--transicion);
+        }
+        .menu a:hover, .menu a.activo { color: var(--color-primario); background: rgba(79,70,229,0.08); }
+        .user-info { display: flex; align-items: center; gap: 10px; }
+        .avatar {
+            width: 34px; height: 34px;
+            background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 13px;
+        }
+        .nombre-usuario { font-size: 13px; font-weight: 600; }
+        .rol-badge {
+            font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            background: rgba(79,70,229,0.1); color: var(--color-primario);
+        }
+        .btn-logout {
+            background: none; border: 1.5px solid #fecaca; color: var(--color-error);
+            padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all var(--transicion); font-family: 'DM Sans', sans-serif;
+        }
+        .btn-logout:hover { background: #fef2f2; }
+
+        /* MAIN */
+        main { padding: 28px 30px; max-width: 1100px; margin: 0 auto; }
+
+        /* BIENVENIDA */
+        .bienvenida {
+            background: linear-gradient(135deg, var(--color-primario) 0%, #6d67f0 50%, var(--color-acento) 100%);
+            padding: 28px 32px; border-radius: 16px; margin-bottom: 28px;
+            color: white; position: relative; overflow: hidden;
+        }
+        .bienvenida::before {
+            content: ""; position: absolute; top: -40px; right: -40px;
+            width: 160px; height: 160px; background: rgba(255,255,255,0.06); border-radius: 50%;
+        }
+        .bienvenida h2 { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .bienvenida p { opacity: 0.85; font-size: 14px; }
+
+        /* STATS */
+        .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .stat-card {
+            background: white; border: 1px solid var(--color-borde); border-radius: 14px;
+            padding: 20px; box-shadow: var(--sombra); display: flex; align-items: center; gap: 14px;
+        }
+        .stat-icon { font-size: 28px; }
+        .stat-valor { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; color: var(--color-primario); }
+        .stat-label { font-size: 12px; color: var(--color-texto-suave); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* PANEL */
+        .panel {
+            background: white; border: 1px solid var(--color-borde); border-radius: 14px;
+            padding: 24px; box-shadow: var(--sombra); margin-bottom: 20px;
+        }
+        .panel-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--color-borde);
+        }
+        .panel-titulo { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; }
+
+        /* FILTRO */
+        .filtros { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .filtros select, .filtros input {
+            padding: 8px 12px; border: 1.5px solid var(--color-borde); border-radius: 8px;
+            font-size: 13px; font-family: 'DM Sans', sans-serif; background: #fafafa;
+            color: var(--color-texto); cursor: pointer;
+        }
+        .filtros select:focus, .filtros input:focus {
+            outline: none; border-color: var(--color-primario);
+        }
+
+        /* TABLA */
+        .tabla-wrapper { overflow-x: auto; border-radius: 10px; border: 1px solid var(--color-borde); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        thead th {
+            padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; color: white; background: var(--color-primario);
+        }
+        tbody td { padding: 11px 16px; border-bottom: 1px solid var(--color-borde); color: var(--color-texto); }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(79,70,229,0.02); }
+
+        /* BADGES */
+        .badge {
+            padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .badge-activa  { background: #d3f9d8; color: #2b8a3e; }
+        .badge-cerrada { background: #e2e8f0; color: #475569; }
+
+        /* LOADING / EMPTY */
+        .loading, .empty {
+            text-align: center; padding: 40px; color: var(--color-texto-suave); font-size: 14px;
+        }
+        .empty span { font-size: 36px; display: block; margin-bottom: 10px; }
+
+        /* FOOTER */
+        footer {
+            text-align: center; padding: 20px; margin-top: 20px;
+            color: var(--color-texto-suave); font-size: 13px;
+            border-top: 1px solid var(--color-borde);
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
+    <div class="menu">
+        <a href="../PAGE/dashboard-estudiante.html">🏠 Inicio</a>
+        <a href="../PAGE/Ingresarvectores.html">➕ Nueva Suma</a>
+        <a href="../PAGE/sesiones-estudiante.html" class="activo">🕐 Mis Sesiones</a>
+    </div>
+    <div class="user-info">
+        <div class="avatar" id="avatarLetra">E</div>
+        <div>
+            <div class="nombre-usuario" id="nombreUsuario">Estudiante</div>
+            <div class="rol-badge">ESTUDIANTE</div>
+        </div>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar sesión</button>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+
+    <!-- BIENVENIDA -->
+    <div class="bienvenida">
+        <h2>🕐 Mis Sesiones</h2>
+        <p>Historial de accesos y actividad en la plataforma VectoFlow</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-icon">📋</div>
+            <div>
+                <div class="stat-valor" id="totalSesiones">0</div>
+                <div class="stat-label">Total Sesiones</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div>
+                <div class="stat-valor" id="sesionesActivas">0</div>
+                <div class="stat-label">Sesiones Activas</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔒</div>
+            <div>
+                <div class="stat-valor" id="sesionesCerradas">0</div>
+                <div class="stat-label">Sesiones Cerradas</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div>
+                <div class="stat-valor" id="ultimaConexion">—</div>
+                <div class="stat-label">Última Conexión</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL TABLA -->
+    <div class="panel">
+        <div class="panel-header">
+            <div class="panel-titulo">📜 Historial de Sesiones</div>
+            <div class="filtros">
+                <select id="filtroEstado" onchange="filtrarSesiones()">
+                    <option value="">Todos los estados</option>
+                    <option value="activa">Activas</option>
+                    <option value="cerrada">Cerradas</option>
+                </select>
+                <input type="date" id="filtroFecha" onchange="filtrarSesiones()" placeholder="Filtrar por fecha">
+            </div>
+        </div>
+
+        <div class="tabla-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>IP Acceso</th>
+                        <th>Dispositivo</th>
+                        <th>Duración</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaSesiones">
+                    <tr><td colspan="7" class="loading">⏳ Cargando sesiones...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</main>
+
+<footer>VectoFlow © 2025 — Emanuel Chaverra Marín</footer>
+
+<script>
+    // ============================================================
+    // sesiones-estudiante.js — Vista de sesiones del estudiante
+    // Trazabilidad: HU-018 | RF-018 | RNF-06
+    // ============================================================
+
+    const API = 'http://localhost:3000';
+    let todasLasSesiones = [];
+
+    // Inicializar página
+    document.addEventListener('DOMContentLoaded', () => {
+        const token = localStorage.getItem('token');
+        const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+
+        if (!token) { window.location.href = 'login.html'; return; }
+
+        // Mostrar nombre en navbar
+        if (usuario.Nombre) {
+            document.getElementById('nombreUsuario').textContent = usuario.Nombre;
+            document.getElementById('avatarLetra').textContent = usuario.Nombre.charAt(0).toUpperCase();
+        }
+
+        cargarSesiones(token);
+    });
+
+    // Cargar sesiones desde la API
+    // HU-018 | RF-018
+    async function cargarSesiones(token) {
+        try {
+            const res = await fetch(`${API}/api/sesiones/mis-sesiones`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+
+            if (!res.ok) throw new Error('Error al cargar sesiones');
+
+            todasLasSesiones = await res.json();
+            renderizarSesiones(todasLasSesiones);
+            actualizarStats(todasLasSesiones);
+
+        } catch (err) {
+            console.error(err);
+            document.getElementById('tablaSesiones').innerHTML =
+                `<tr><td colspan="7" class="empty"><span>⚠️</span>No se pudieron cargar las sesiones.</td></tr>`;
+        }
+    }
+
+    // Renderizar tabla
+    function renderizarSesiones(sesiones) {
+        const tbody = document.getElementById('tablaSesiones');
+        if (sesiones.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" class="empty"><span>🕐</span>No tienes sesiones registradas aún.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = sesiones.map((s, i) => {
+            const inicio   = new Date(s.FechaInicio);
+            const fin      = s.FechaFin ? new Date(s.FechaFin) : null;
+            const duracion = fin ? calcularDuracion(inicio, fin) : '— En curso';
+            const estado   = s.Estado == 1 ? 'activa' : 'cerrada';
+            const badgeClass = estado === 'activa' ? 'badge-activa' : 'badge-cerrada';
+            const estadoTexto = estado === 'activa' ? '🟢 Activa' : '🔒 Cerrada';
+
+            return `
+                <tr>
+                    <td><strong>${i + 1}</strong></td>
+                    <td>${formatearFecha(inicio)}</td>
+                    <td>${fin ? formatearFecha(fin) : '<em style="color:#94a3b8">En curso</em>'}</td>
+                    <td><code style="font-size:12px;background:#f1f5f9;padding:2px 6px;border-radius:4px">${s.IPAcceso || '—'}</code></td>
+                    <td>${s.Dispositivo || '—'}</td>
+                    <td>${duracion}</td>
+                    <td><span class="badge ${badgeClass}">${estadoTexto}</span></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // Actualizar estadísticas
+    function actualizarStats(sesiones) {
+        const activas  = sesiones.filter(s => s.Estado == 1).length;
+        const cerradas = sesiones.filter(s => s.Estado == 0).length;
+        const ultima   = sesiones.length > 0 ? new Date(sesiones[0].FechaInicio) : null;
+
+        document.getElementById('totalSesiones').textContent   = sesiones.length;
+        document.getElementById('sesionesActivas').textContent  = activas;
+        document.getElementById('sesionesCerradas').textContent = cerradas;
+        document.getElementById('ultimaConexion').textContent   = ultima
+            ? `${ultima.getDate()}/${ultima.getMonth()+1}`
+            : '—';
+    }
+
+    // Filtrar sesiones
+    function filtrarSesiones() {
+        const estado = document.getElementById('filtroEstado').value;
+        const fecha  = document.getElementById('filtroFecha').value;
+
+        let filtradas = [...todasLasSesiones];
+
+        if (estado === 'activa')  filtradas = filtradas.filter(s => s.Estado == 1);
+        if (estado === 'cerrada') filtradas = filtradas.filter(s => s.Estado == 0);
+
+        if (fecha) {
+            filtradas = filtradas.filter(s => {
+                const f = new Date(s.FechaInicio).toISOString().split('T')[0];
+                return f === fecha;
+            });
+        }
+
+        renderizarSesiones(filtradas);
+    }
+
+    // Cerrar sesión
+    function cerrarSesion() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        window.location.href = 'login.html';
+    }
+
+    // Helpers
+    function formatearFecha(fecha) {
+        return fecha.toLocaleString('es-CO', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function calcularDuracion(inicio, fin) {
+        const diff = Math.floor((fin - inicio) / 1000);
+        const h = Math.floor(diff / 3600);
+        const m = Math.floor((diff % 3600) / 60);
+        const s = diff % 60;
+        if (h > 0) return `${h}h ${m}m`;
+        if (m > 0) return `${m}m ${s}s`;
+        return `${s}s`;
+    }
+</script>
+
+</body>
+</html>

@@ -50,5 +50,22 @@ const soloAdmin = (req, res, next) => {
     next();
 };
 
-// Exporta ambos middlewares para usarlos en authRoutes.js
-module.exports = { verificarToken, soloAdmin };
+// Middleware — Solo Docentes
+// Trazabilidad: HU-010 | RF-010
+const soloDocente = (req, res, next) => {
+    if (req.usuario.rol !== 3) {
+        return res.status(403).json({ error: 'Acceso denegado. Solo docentes.' });
+    }
+    next();
+};
+
+// Middleware — Solo Estudiantes (FKRol = 2)
+const soloEstudiante = (req, res, next) => {
+    if (req.usuario.rol !== 2){
+        return res.status(403).json({ error: 'Acceso denegado. Solo estudiantes.' });
+    }
+    next();
+};
+
+module.exports = { verificarToken, soloAdmin, soloDocente, soloEstudiante };
+

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--
+ * detalle-vector.html — Detalle atómico de vectores por suma
+ * Trazabilidad: HU-019 | RF-019 | RNF-06
+ * Ubicación: public/PAGE/detalle-vector.html
+-->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Vectores — VectoFlow</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <style>
+        /* ── Filtro panel ── */
+        .filtro-panel {
+            background: white;
+            border: 1px solid var(--color-borde);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            flex-wrap: wrap;
+            box-shadow: var(--sombra);
+        }
+        .filtro-panel.oculto { display: none; }
+        .filtro-panel .form-grupo { margin-bottom: 0; }
+        .filtro-panel select {
+            padding: 9px 14px;
+            border: 1.5px solid var(--color-borde);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--color-fondo);
+            color: var(--color-texto);
+            min-width: 260px;
+            cursor: pointer;
+        }
+        .filtro-panel select:focus {
+            outline: none;
+            border-color: var(--color-primario);
+        }
+
+        /* ── Cards de operación ── */
+        .suma-card {
+            background: white;
+            border: 1px solid var(--color-borde);
+            border-radius: 16px;
+            margin-bottom: 22px;
+            overflow: hidden;
+            box-shadow: var(--sombra);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .suma-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra-hover);
+        }
+
+        .suma-header {
+            background: linear-gradient(90deg, var(--color-primario), var(--color-secundario));
+            padding: 14px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .suma-header h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+        .suma-meta { font-size: 12px; color: rgba(255,255,255,0.85); }
+        .ejercicio-badge {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .suma-body { padding: 20px 22px; }
+
+        /* ── Chips de vectores ── */
+        .vectores-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .vector-chip {
+            background: rgba(79,70,229,0.06);
+            border: 1.5px solid rgba(79,70,229,0.2);
+            border-radius: 10px;
+            padding: 10px 18px;
+            text-align: center;
+            min-width: 110px;
+        }
+        .vector-chip.resultado {
+            background: rgba(16,185,129,0.06);
+            border-color: rgba(16,185,129,0.3);
+        }
+        .v-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--color-primario);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .vector-chip.resultado .v-label { color: var(--color-exito); }
+        .v-nombre {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-texto);
+        }
+        .vector-chip.resultado .v-nombre { color: var(--color-exito); }
+
+        /* ── Tabla atómica ── */
+        .tabla-atomica-wrapper {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--color-borde);
+        }
+        .tabla-atomica {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .tabla-atomica thead th {
+            padding: 10px 16px;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(79,70,229,0.07);
+            color: var(--color-primario);
+            border-bottom: 1px solid var(--color-borde);
+        }
+        .tabla-atomica thead th:first-child { text-align: left; }
+        .tabla-atomica tbody td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--color-borde);
+            text-align: center;
+            color: var(--color-texto);
+        }
+        .tabla-atomica tbody td:first-child { text-align: left; }
+        .tabla-atomica tbody tr:last-child td { border-bottom: none; }
+        .tabla-atomica tbody tr:hover { background: var(--color-fondo); }
+
+        .chip-indice {
+            display: inline-block;
+            background: var(--color-primario);
+            color: white;
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 28px;
+            text-align: center;
+        }
+        .valor-celda {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+        }
+        .total-celda {
+            display: inline-block;
+            background: rgba(79,70,229,0.09);
+            color: var(--color-primario);
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* ── Estados vacío / error ── */
+        .empty, .loading, .error-msg {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--color-texto-suave);
+            font-size: 14px;
+        }
+        .empty span, .loading span, .error-msg span {
+            font-size: 42px;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .error-msg { color: var(--color-error); }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo-nav">Vecto<span>Flow</span></div>
+    <nav class="menu" id="navMenu">
+        <a href="../PAGE/Ingresarvectores.html">➕ Nueva Suma</a>
+        <a href="../PAGE/Historial.html">📋 Historial</a>
+        <a href="../PAGE/detalle-vector.html" class="activo">🔬 Detalle</a>
+        <a href="../PAGE/Resumen-sesion.html">📊 Mis Métricas</a>
+        <a href="../PAGE/Sesiones-estudiante.html">🕐 Mis Sesiones</a>
+    </nav>
+    <div class="user-info">
+        <div class="avatar" id="avatar-inicial">U</div>
+        <div>
+            <div class="nombre-usuario" id="nombre-display">Usuario</div>
+            <span class="rol-badge" id="rol-badge">Rol</span>
+        </div>
+        <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+</header>
+
+<main>
+
+    <div class="bienvenida">
+        <h2>🔬 Detalle Atómico de Vectores</h2>
+        <p>Visualiza cada elemento individual (índice por índice) de los vectores utilizados en cada suma.</p>
+    </div>
+
+    <!-- Panel filtro — solo visible para Docente (renderNavbar lo activa) -->
+    <div class="filtro-panel oculto" id="filtroPanel">
+        <div class="form-grupo">
+            <label>Filtrar por Estudiante</label>
+            <select id="selectEstudiante">
+                <option value="">Selecciona un estudiante...</option>
+            </select>
+        </div>
+        <button class="btn btn-primario" onclick="cargarHistorial()">🔍 Ver Detalle</button>
+    </div>
+
+    <div id="contenido">
+        <div class="empty">
+            <span>⏳</span>Cargando datos...
+        </div>
+    </div>
+
+</main>
+
+<footer>VectoFlow © 2025 — Plataforma educativa para la suma de vectores</footer>
+
+<script src="../JS/dashboard.js"></script>
+<script src="../JS/detalle-vector.js"></script>
+</body>
+</html>
