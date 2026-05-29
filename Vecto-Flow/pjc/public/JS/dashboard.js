@@ -10,6 +10,8 @@
  *
  *  2. Provee la función de cierre de sesión (logout), que
  *     elimina la sesión y redirige al login.
+ *
+ *  Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  * ============================================================
  */
 
@@ -21,10 +23,12 @@
  *  de construir el árbol HTML, sin esperar imágenes ni CSS.
  *  Es el momento seguro más temprano para manipular elementos
  *  del DOM con JavaScript.
+ *
+ *  Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  * ============================================================ */
 window.addEventListener('DOMContentLoaded', () => {
 
-    /* ── Lectura de la sesión desde localStorage ──────────────
+     /* ── Lectura de la sesión desde localStorage ──────────────
      *  localStorage guarda datos como texto plano (strings).
      *  JSON.parse() convierte ese string de vuelta a un objeto
      *  JavaScript utilizable.
@@ -94,7 +98,10 @@ window.addEventListener('DOMContentLoaded', () => {
  *
  *  Esta función es llamada típicamente desde un botón
  *  "Cerrar sesión" en la navbar del dashboard.
+ *
+ *  Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  * ============================================================ */
+
 function logout() {
     localStorage.removeItem('sesion');       // Elimina la sesión del almacenamiento local
     window.location.href = 'login.html';     // Redirige a la página de inicio de sesión

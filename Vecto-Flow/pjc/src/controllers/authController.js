@@ -17,11 +17,11 @@ const bcrypt = require('bcryptjs');
 // El token se envía al frontend y se usa en cada petición protegida
 const jwt = require('jsonwebtoken');
 
-
 // ─────────────────────────────────────────────
 // FUNCIÓN: registrar
 // Método HTTP esperado: POST /api/auth/registro
 // Body esperado: { nombre, apellido, correo, contraseña, fkRol }
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-25
 // ─────────────────────────────────────────────
 const registrar = async (req, res) => {
     // Extrae los campos del cuerpo de la petición HTTP
@@ -54,11 +54,11 @@ const registrar = async (req, res) => {
     }
 };
 
-
 // ─────────────────────────────────────────────
 // FUNCIÓN: login
 // Método HTTP esperado: POST /api/auth/login
 // Body esperado: { correo, contraseña }
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 const login = async (req, res) => {
     // Extrae correo y contraseña del cuerpo de la petición
@@ -108,7 +108,7 @@ const login = async (req, res) => {
 // FUNCIÓN: listarUsuarios
 // Método HTTP esperado: GET /api/usuarios
 // Acceso: Solo Administrador (requiere verificarToken + soloAdmin)
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 const listarUsuarios = async (req, res) => {
     try {
@@ -130,14 +130,13 @@ const listarUsuarios = async (req, res) => {
     }
 };
 
-
 // ─────────────────────────────────────────────
 // FUNCIÓN: actualizarUsuario
 // Método HTTP esperado: PUT /api/usuarios/:id
 // Params: id (PKUsuario del usuario a modificar)
 // Body esperado: { nombre, apellido, correo, fkRol }
 // Acceso: Solo Administrador (requiere verificarToken + soloAdmin)
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-06
 // ─────────────────────────────────────────────
 const actualizarUsuario = async (req, res) => {
     // Extrae el ID del usuario desde los parámetros de la URL (/api/usuarios/5)
@@ -177,7 +176,7 @@ const actualizarUsuario = async (req, res) => {
 // Propósito: Soft delete — alterna el Estado entre 1 (activo) y 0 (inactivo)
 //            NO elimina el registro para preservar integridad referencial
 // Acceso: Solo Administrador (requiere verificarToken + soloAdmin)
-// Trazabilidad: HU-024 | RF-024 | RNF-11
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-11
 // ─────────────────────────────────────────────
 const desactivarUsuario = async (req, res) => {
     const { id } = req.params;
@@ -200,10 +199,12 @@ const desactivarUsuario = async (req, res) => {
     }
 };
 
+// ─────────────────────────────────────────────
 // FUNCIÓN: listarEstudiantes
 // Método HTTP esperado: GET /api/usuarios/estudiantes
 // Acceso: Docente
-// Trazabilidad: HU-018 | RF-018
+// Trazabilidad: CU-22 | RF-021 | HU-021 | RNF-08
+// ─────────────────────────────────────────────
 const listarEstudiantes = async (req, res) => {
     try {
         const [rows] = await db.query(`

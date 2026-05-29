@@ -3,6 +3,7 @@
  * ----
  * Maneja la selección de rol, visibilidad de contraseña,
  * mensajes de feedback y el envío del formulario a la API.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  */
 
 
@@ -10,7 +11,8 @@
  * Gestiona la selección visual del rol (Estudiante / Docente / Admin).
  * Quita la clase 'activo' de todos los chips y se la aplica
  * al seleccionado. Luego guarda el valor del rol en el input
- * oculto #rol para que esté disponible al enviar el formulario. */
+ * oculto #rol para que esté disponible al enviar el formulario.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12 */
 function seleccionarRol(rol, chip) {
     document.querySelectorAll('.rol-chip').forEach(c => c.classList.remove('activo'));
     chip.classList.add('activo');
@@ -18,6 +20,8 @@ function seleccionarRol(rol, chip) {
 }
 
 
+
+// CU-24 | RF-024 | HU-024 — togglePassword()
 // Alterna el campo de contraseña entre texto visible y oculto (••••)
 function togglePassword() {
     const input = document.getElementById('password');
@@ -28,7 +32,8 @@ function togglePassword() {
 /* ── mostrarMsg(tipo, texto) ────
  * Oculta ambos mensajes (error y éxito) y luego muestra
  * solo el que corresponde al tipo indicado ('error' o 'exito').
- * Centraliza el manejo de feedback visual del formulario. */
+ * Centraliza el manejo de feedback visual del formulario.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-07 */
 function mostrarMsg(tipo, texto) {
     const err = document.getElementById('msg-error');
     const ok  = document.getElementById('msg-exito');
@@ -50,7 +55,8 @@ function mostrarMsg(tipo, texto) {
  *
  * Si todo es válido, convierte el rol a su FK numérica
  * (admin → 1, docente → 3, estudiante → 2) y hace el POST al backend.
- * En caso de éxito, muestra un mensaje y redirige al login. */
+ * En caso de éxito, muestra un mensaje y redirige al login.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12 */
 async function registrar() {
     const nombre   = document.getElementById('nombre').value.trim();
     const apellido = document.getElementById('apellido').value.trim();

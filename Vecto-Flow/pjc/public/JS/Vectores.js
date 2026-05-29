@@ -5,6 +5,7 @@
  * vectores extra (C, D, E...), ingresando su dimensión y valores
  * celda por celda. Valida que todos tengan la misma dimensión
  * antes de guardarlos en localStorage y continuar a la suma.
+ * Trazabilidad: CU-01 | RF-001 | HU-001 | RNF-05
  */
 
 
@@ -16,7 +17,8 @@ let contadorExtras = 0;
  * Genera los inputs numéricos del vector A o B según la dimensión
  * ingresada. Cada celda muestra su índice [i] y un input asociado.
  * Si la dimensión es inválida (fuera de 1–10), muestra un aviso.
- * Cada input llama a verificarDimensiones() al cambiar su valor. */
+ * Cada input llama a verificarDimensiones() al cambiar su valor.
+ * Trazabilidad: CU-01 | RF-001 | HU-001 | RNF-02 */
 function generarCeldas(nombre, dim) {
     const n = parseInt(dim);
     const contenedor = document.getElementById(`celdas-${nombre}`);
@@ -57,7 +59,8 @@ function generarCeldas(nombre, dim) {
 
 /* ── generarCeldasExtra(id, nombre, dim) ───────────────────────
  * Igual que generarCeldas() pero para vectores extra (C, D...).
- * Usa el id único del bloque extra en lugar del nombre del vector. */
+ * Usa el id único del bloque extra en lugar del nombre del vector.
+ * Trazabilidad: CU-07 | RF-007 | HU-010 | RNF-05 */
 function generarCeldasExtra(id, nombre, dim) {
     const n = parseInt(dim);
     const contenedor = document.getElementById(`celdas-${id}`);
@@ -97,7 +100,8 @@ function generarCeldasExtra(id, nombre, dim) {
  * Crea dinámicamente un nuevo bloque de vector extra en el DOM.
  * Los nombres siguen la secuencia C, D, E, F, G.
  * Cada bloque incluye su propio input de dimensión, celdas
- * y un botón para eliminarlo. */
+ * y un botón para eliminarlo.
+ * Trazabilidad: CU-07 | RF-007 | HU-010 | RNF-05 */
 function agregarVectorExtra() {
     contadorExtras++;
     const id     = `extra-${contadorExtras}`;
@@ -126,6 +130,7 @@ function agregarVectorExtra() {
 }
 
 
+// CU-12 | RF-006 | HU-004 | RNF-11 — eliminarVectorExtra()
 // Elimina el bloque de un vector extra del DOM y re-verifica dimensiones
 function eliminarVectorExtra(id) {
     const bloque = document.getElementById(`bloque-${id}`);
@@ -133,11 +138,11 @@ function eliminarVectorExtra(id) {
     verificarDimensiones();
 }
 
-
 /* ── verificarDimensiones() ────────────────────────────────────
  * Compara las dimensiones de todos los vectores activos (A, B y extras).
  * Si no coinciden, muestra una alerta con los valores detectados.
- * Se ejecuta cada vez que el usuario cambia una dimensión o un valor. */
+ * Se ejecuta cada vez que el usuario cambia una dimensión o un valor.
+ * Trazabilidad: CU-01 | RF-017 | HU-001 | RNF-05 */
 function verificarDimensiones() {
     const dimA = parseInt(document.getElementById('dim-a')?.value);
     const dimB = parseInt(document.getElementById('dim-b')?.value);
@@ -166,7 +171,8 @@ function verificarDimensiones() {
 /* ── obtenerValoresVector(id, dim) ─────────────────────────────
  * Recorre los inputs de un vector y devuelve sus valores como
  * array de números. Si algún campo está vacío o no es numérico,
- * le aplica la clase 'error' visualmente y retorna null. */
+ * le aplica la clase 'error' visualmente y retorna null.
+ * Trazabilidad: CU-01 | RF-001 | HU-001 | RNF-05 */
 function obtenerValoresVector(id, dim) {
     const valores = [];
     for (let i = 0; i < dim; i++) {
@@ -183,7 +189,8 @@ function obtenerValoresVector(id, dim) {
 /* ── reiniciarTodo() ───────────────────────────────────────────
  * Pide confirmación y limpia todos los vectores del formulario:
  * dimensiones, celdas y bloques extra. El historial de sumas
- * en localStorage no se ve afectado. */
+ * en localStorage no se ve afectado.
+ * Trazabilidad: CU-12 | RF-006 | HU-004 | RNF-11 */
 function reiniciarTodo() {
     if (!confirm('¿Seguro que quieres reiniciar todos los vectores? El historial no se borrará.')) return;
 
@@ -202,7 +209,8 @@ function reiniciarTodo() {
  * Luego recoge los valores de todos los vectores (A, B y extras),
  * verifica que los extras también tengan la misma dimensión,
  * guarda el array de vectores en localStorage y redirige a la
- * pantalla de ejecución de la suma. */
+ * pantalla de ejecución de la suma.
+ * Trazabilidad: CU-01 | RF-001 | HU-001 | RNF-06 */
 function guardarYContinuar() {
     const dimA = parseInt(document.getElementById('dim-a').value);
     const dimB = parseInt(document.getElementById('dim-b').value);

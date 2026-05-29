@@ -5,13 +5,15 @@
  * ingresado coincide, muestra su contraseña en pantalla.
  * ⚠️ Nota: guardar contraseñas en texto plano en localStorage
  * no es seguro para entornos de producción.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  */
 
 
 /* ── recuperar() ───────────────────────────────────────────────
  * Lee el nombre de usuario del formulario y lo compara con el
  * usuario almacenado en localStorage. Muestra la contraseña si
- * coincide, o un mensaje de error si no existe o no se encontró. */
+ * coincide, o un mensaje de error si no existe o no se encontró.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-07 */
 function recuperar() {
 
     let user    = document.getElementById("usuario").value; // Nombre ingresado por el usuario

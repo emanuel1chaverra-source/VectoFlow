@@ -6,8 +6,8 @@
 
 const db = require('../config/db');
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — listarEjercicios()
 // READ — Listar todos los ejercicios con su categoría
-// HU-014 | RF-014
 const listarEjercicios = async (req, res) => {
     try {
         const [rows] = await db.query(`
@@ -23,8 +23,8 @@ const listarEjercicios = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — crearEjercicio()
 // CREATE — Crear nuevo ejercicio
-// HU-015 | RF-015
 const crearEjercicio = async (req, res) => {
     const { Titulo, Descripcion, FKDocente, FKCategoria } = req.body;
     if (!Titulo || !FKDocente || !FKCategoria)
@@ -42,8 +42,8 @@ const crearEjercicio = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — editarEjercicio()
 // UPDATE — Editar ejercicio
-// HU-016 | RF-016
 const editarEjercicio = async (req, res) => {
     const { id } = req.params;
     const { Titulo, Descripcion, FKCategoria } = req.body;
@@ -61,8 +61,8 @@ const editarEjercicio = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-11 — toggleEjercicio()
 // DELETE (soft) — Activar/Desactivar ejercicio
-// HU-017 | RF-017
 const toggleEjercicio = async (req, res) => {
     const { id } = req.params;
     try {

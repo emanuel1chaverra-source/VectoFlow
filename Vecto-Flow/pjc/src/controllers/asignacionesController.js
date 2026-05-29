@@ -6,8 +6,8 @@
 
 const db = require('../config/db');
 
+// CU-21 | RF-020 | HU-020 | RNF-06 — listarAsignaciones()
 // READ — Listar todas las asignaciones
-// HU-022 | RF-022
 const listarAsignaciones = async (req, res) => {
     try {
         const [rows] = await db.query(`
@@ -28,8 +28,8 @@ const listarAsignaciones = async (req, res) => {
     }
 };
 
+// CU-21 | RF-020 | HU-020 | RNF-06 — crearAsignacion()
 // CREATE — Crear nueva asignación
-// HU-023 | RF-023
 const crearAsignacion = async (req, res) => {
     const { FechaAsignacion, FechaLimite, FKEjercicio, FKEstudiante, FKDocente } = req.body;
     if (!FechaAsignacion || !FKEjercicio || !FKEstudiante || !FKDocente)
@@ -47,8 +47,8 @@ const crearAsignacion = async (req, res) => {
     }
 };
 
+// CU-21 | RF-020 | HU-020 | RNF-06 — editarAsignacion()
 // UPDATE — Editar asignación
-// HU-024 | RF-024
 const editarAsignacion = async (req, res) => {
     const { id } = req.params;
     const { FechaLimite, FKEjercicio, FKEstudiante } = req.body;
@@ -64,8 +64,8 @@ const editarAsignacion = async (req, res) => {
     }
 };
 
+// CU-21 | RF-020 | HU-020 | RNF-11 — toggleAsignacion()
 // DELETE (soft) — Activar/Desactivar asignación
-// HU-025 | RF-025
 const toggleAsignacion = async (req, res) => {
     const { id } = req.params;
     try {

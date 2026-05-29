@@ -1,5 +1,6 @@
 const db = require('../config/db');
 
+// CU-19 | RF-019 | HU-019 | RNF-04 — registrarMetrica()
 // FUNCIÓN: registrarMetrica | POST /api/metricas
 const registrarMetrica = async (req, res) => {
     try {
@@ -16,6 +17,7 @@ const registrarMetrica = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
+// CU-19 | RF-019 | HU-019 | RNF-06 — misMetricas()
 // FUNCIÓN: misMetricas | GET /api/metricas/mis-metricas
 const misMetricas = async (req, res) => {
     try {
@@ -33,6 +35,7 @@ const misMetricas = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
+// CU-22 | RF-021 | HU-021 | RNF-08 — metricasEstudiante()
 // FUNCIÓN: metricasEstudiante | GET /api/metricas/estudiante/:id (solo docente)
 const metricasEstudiante = async (req, res) => {
     try {

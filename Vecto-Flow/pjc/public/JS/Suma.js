@@ -5,6 +5,7 @@
  * ejecuta la suma elemento a elemento, muestra el resultado con
  * una tabla comparativa y permite navegar a la vista paso a paso,
  * tabla completa o guardar la operación en el historial.
+ * Trazabilidad: CU-03 | RF-009 | HU-008 | RNF-04
  */
 
 
@@ -21,11 +22,13 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
+
 /* ── cargarVectoresPreview() ───────────────────────────────────
  * Lee los vectores desde localStorage y los renderiza como cards
  * en el contenedor #vectores-preview, separados por el símbolo '+'.
  * Si no hay vectores guardados, muestra un aviso y deshabilita
- * el botón de ejecutar. */
+ * el botón de ejecutar.
+ * Trazabilidad: CU-01 | RF-001 | HU-001 | RNF-19 */
 function cargarVectoresPreview() {
     const data       = localStorage.getItem('vectores_activos');
     const contenedor = document.getElementById('vectores-preview');
@@ -80,7 +83,8 @@ function cargarVectoresPreview() {
  * Primero valida que todos los vectores tengan la misma dimensión.
  * Luego calcula la suma, muestra las celdas del resultado, genera
  * una tabla comparativa HTML con todos los vectores y guarda el
- * resultado en localStorage para que paso-a-paso.js lo consuma. */
+ * resultado en localStorage para que paso-a-paso.js lo consuma.
+ * Trazabilidad: CU-03 | RF-009 | HU-008 | RNF-04 */
 function ejecutarSuma() {
     const data = localStorage.getItem('vectores_activos');
     if (!data) return;
@@ -151,14 +155,16 @@ function ejecutarSuma() {
     document.getElementById('resultado-bloque').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-
-// Redirige a la vista animada paso a paso (requiere suma ejecutada)
+// CU-04 | RF-018 | HU-018 — verPasoAPaso()
+// Redirige a la vista animada paso a paso (requiere suma ejecutada
 function verPasoAPaso() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
     window.location.href = 'paso-a-paso.html';
 }
 
 
+
+// CU-17 | RF-013 | HU-011 — verTablaCompleta()
 // Redirige a la tabla comparativa completa (requiere suma ejecutada)
 function verTablaCompleta() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
@@ -169,7 +175,8 @@ function verTablaCompleta() {
 /* ── guardarEnHistorial() ──────────────────────────────────────
  * Agrega el resultado actual al historial de sumas en localStorage.
  * Usa unshift() para que la operación más reciente quede primero.
- * El historial es un array de objetos resultadoActual. */
+ * El historial es un array de objetos resultadoActual.
+ * Trazabilidad: CU-09 | RF-019 | HU-019 | RNF-15 */
 async function guardarEnHistorial() {
     if (!resultadoActual) { alert('Primero ejecuta la suma.'); return; }
 

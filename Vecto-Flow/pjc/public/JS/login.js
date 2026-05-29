@@ -2,9 +2,10 @@
  * login.js — Lógica del formulario de inicio de sesión
  * Maneja: visibilidad de contraseña, mensajes de error
  * y autenticación contra la API con redirección por rol.
+ * Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
  */
 
-
+// CU-24 | RF-024 | HU-024 — togglePassword()
 // Alterna el campo de contraseña entre texto visible y oculto (••••)
 function togglePassword() {
     const input = document.getElementById('password');
@@ -12,6 +13,7 @@ function togglePassword() {
 }
 
 
+// CU-24 | RF-024 | HU-024 | RNF-07 — mostrarError()
 // Muestra un mensaje de error en el elemento #msg-error del DOM
 function mostrarError(texto) {
     const el = document.getElementById('msg-error');
@@ -19,7 +21,7 @@ function mostrarError(texto) {
     el.style.display = 'block';
 }
 
-
+// CU-24 | RF-024 | HU-024 | RNF-12 — login()
 // Función principal: valida el formulario, llama a la API y gestiona la respuesta
 async function login() {
     const correo = document.getElementById('correo').value.trim(); // trim() elimina espacios accidentales

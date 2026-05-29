@@ -13,6 +13,7 @@ const db = require('../config/db');
 // Método HTTP: GET /api/metricas
 // Acceso: Estudiante autenticado
 // Retorna métricas del estudiante con JOIN a operaciones_suma
+// Trazabilidad: CU-19 | RF-019 | HU-019 | RNF-06
 // ─────────────────────────────────────────────
 const listarMetricas = async (req, res) => {
     const idEstudiante = req.usuario.id;
@@ -44,6 +45,7 @@ const listarMetricas = async (req, res) => {
 // Método HTTP: POST /api/metricas
 // Acceso: Estudiante autenticado
 // Body: { intentos, tiempoSegundos, aciertos, fkOperacion }
+// Trazabilidad: CU-19 | RF-019 | HU-019 | RNF-15
 // ─────────────────────────────────────────────
 const crearMetrica = async (req, res) => {
     const { intentos, tiempoSegundos, aciertos, fkOperacion } = req.body;

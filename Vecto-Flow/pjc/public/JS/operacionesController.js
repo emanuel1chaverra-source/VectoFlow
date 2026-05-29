@@ -1,5 +1,6 @@
 const db = require('../config/db');
 
+// CU-03 | RF-009 | HU-008 | RNF-04 — ejecutarSuma()
 // FUNCIÓN: ejecutarSuma | POST /api/operaciones/suma
 const ejecutarSuma = async (req, res) => {
     try {
@@ -50,6 +51,7 @@ const ejecutarSuma = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
+// CU-10 | RF-019 | HU-019 | RNF-06 — listarOperaciones()
 // FUNCIÓN: listarOperaciones | GET /api/operaciones
 const listarOperaciones = async (req, res) => {
     try {
@@ -71,6 +73,7 @@ const listarOperaciones = async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 };
 
+// CU-24 | RF-004 | HU-004 | RNF-11 — eliminarOperacion()
 // FUNCIÓN: eliminarOperacion | DELETE /api/operaciones/:id
 const eliminarOperacion = async (req, res) => {
     try {

@@ -6,8 +6,8 @@
 
 const db = require('../config/db');
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — listarCategorias()
 // READ — Listar todas las categorías
-// HU-010 | RF-010
 const listarCategorias = async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM categorias_ejercicio ORDER BY PKCategoria DESC');
@@ -18,8 +18,8 @@ const listarCategorias = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — crearCategoria()
 // CREATE — Crear nueva categoría
-// HU-011 | RF-011
 const crearCategoria = async (req, res) => {
     const { NombreCategoria, Descripcion } = req.body;
     if (!NombreCategoria)
@@ -36,8 +36,8 @@ const crearCategoria = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-06 — editarCategoria()
 // UPDATE — Editar categoría
-// HU-012 | RF-012
 const editarCategoria = async (req, res) => {
     const { id } = req.params;
     const { NombreCategoria, Descripcion } = req.body;
@@ -55,8 +55,8 @@ const editarCategoria = async (req, res) => {
     }
 };
 
+// CU-20 | RF-020 | HU-020 | RNF-11 — toggleCategoria()
 // DELETE (soft) — Activar/Desactivar categoría
-// HU-013 | RF-013
 const toggleCategoria = async (req, res) => {
     const { id } = req.params;
     try {

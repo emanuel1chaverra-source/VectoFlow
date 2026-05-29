@@ -13,6 +13,7 @@ const db = require('../config/db');
 // Método HTTP: GET /api/detalle-vector/:fkVector
 // Acceso: Estudiante autenticado
 // Retorna: arreglo de { PKDetalle, Indice, Valor } ordenado por Indice
+// Trazabilidad: CU-08 | RF-012 | HU-009 | RNF-06
 // ─────────────────────────────────────────────
 const obtenerDetalleVector = async (req, res) => {
     const { fkVector } = req.params;

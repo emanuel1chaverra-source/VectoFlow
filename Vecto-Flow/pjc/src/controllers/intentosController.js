@@ -6,8 +6,8 @@
 
 const db = require('../config/db');
 
+// CU-22 | RF-021 | HU-021 | RNF-06 — listarIntentos()
 // READ — Listar todos los intentos
-// HU-026 | RF-026
 const listarIntentos = async (req, res) => {
     try {
         const [rows] = await db.query(`
@@ -23,8 +23,8 @@ const listarIntentos = async (req, res) => {
     }
 };
 
+// CU-03 | RF-009 | HU-008 | RNF-15 — crearIntento()
 // CREATE — Registrar nuevo intento
-// HU-027 | RF-027
 const crearIntento = async (req, res) => {
     const { NumeroIntento, TiempoSegundos, Calificacion, Observacion, FKAsignacion, FKOperacion } = req.body;
     if (!NumeroIntento || !FKAsignacion)
@@ -43,8 +43,8 @@ const crearIntento = async (req, res) => {
     }
 };
 
+// CU-22 | RF-021 | HU-021 | RNF-06 — editarIntento()
 // UPDATE — Editar intento
-// HU-028 | RF-028
 const editarIntento = async (req, res) => {
     const { id } = req.params;
     const { Calificacion, Observacion, TiempoSegundos } = req.body;
@@ -60,8 +60,8 @@ const editarIntento = async (req, res) => {
     }
 };
 
+// CU-24 | RF-004 | HU-004 | RNF-11 — eliminarIntento()
 // DELETE — Eliminar intento
-// HU-029 | RF-029
 const eliminarIntento = async (req, res) => {
     const { id } = req.params;
     try {

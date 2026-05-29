@@ -94,7 +94,7 @@ async function cargarUsuarios() {
 // ─────────────────────────────────────────────
 // FUNCIÓN: abrirModalCrear
 // Propósito: Limpia y muestra el modal de creación de usuario.
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024
 // ─────────────────────────────────────────────
 function abrirModalCrear() {
     // Limpia todos los campos del formulario antes de abrir
@@ -107,7 +107,7 @@ function abrirModalCrear() {
 
     document.getElementById('modal-crear').style.display = 'flex';
 }
-
+// CU-24 | RF-024 | HU-024 — cerrarModalCrear()
 // Cierra el modal de creación sin guardar cambios
 function cerrarModalCrear() {
     document.getElementById('modal-crear').style.display = 'none';
@@ -118,7 +118,7 @@ function cerrarModalCrear() {
 // FUNCIÓN: crearUsuario
 // Propósito: Hace POST /api/auth/registro para crear un nuevo
 //            usuario desde el panel de administración.
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024
 // ─────────────────────────────────────────────
 async function crearUsuario() {
     // Extrae los valores del formulario del modal
@@ -173,7 +173,7 @@ async function crearUsuario() {
 // FUNCIÓN: abrirModal (editar)
 // Propósito: Precarga los datos del usuario seleccionado
 //            en el formulario del modal de edición.
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024
 // ─────────────────────────────────────────────
 function abrirModal(id, nombre, apellido, correo, fkRol) {
     // Inyecta los datos actuales del usuario en los inputs del modal
@@ -187,6 +187,7 @@ function abrirModal(id, nombre, apellido, correo, fkRol) {
     document.getElementById('modal-editar').style.display = 'flex';
 }
 
+// CU-24 | RF-024 | HU-024 — cerrarModal()
 // Cierra el modal de edición sin guardar cambios
 function cerrarModal() {
     document.getElementById('modal-editar').style.display = 'none';
@@ -198,7 +199,7 @@ function cerrarModal() {
 // FUNCIÓN: guardarEdicion
 // Propósito: Hace PUT /api/auth/usuarios/:id para actualizar
 //            los datos del usuario seleccionado.
-// Trazabilidad: HU-024 | RF-024
+// Trazabilidad: CU-24 | RF-024 | HU-024
 // ─────────────────────────────────────────────
 async function guardarEdicion() {
     // Extrae el ID oculto y los campos editables del modal
@@ -252,7 +253,7 @@ async function guardarEdicion() {
 // Propósito: Hace DELETE /api/auth/usuarios/:id para alternar
 //            el Estado del usuario entre activo (1) e inactivo (0).
 //            Es un soft delete — no elimina el registro de la BD.
-// Trazabilidad: HU-024 | RF-024 | RNF-11
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-11
 // ─────────────────────────────────────────────
 async function toggleEstado(id) {
     // Confirma la acción con el administrador antes de ejecutar
@@ -286,8 +287,8 @@ async function toggleEstado(id) {
 // FUNCIÓN: logout
 // Propósito: Elimina los datos de sesión del localStorage
 //            y redirige al usuario a la página de login.
-// Trazabilidad: HU-024 | RF-024 | RNF-12
-// ─────────────────────────────────────────────
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
+// ────────────────────────────────────────────
 function logout() {
     // Elimina el token JWT y los datos de sesión del almacenamiento local
     localStorage.removeItem('token');
@@ -297,12 +298,12 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-
 // ─────────────────────────────────────────────
 // INICIALIZACIÓN — Se ejecuta cuando el DOM está listo
 // Propósito: Protege la ruta verificando que el usuario
 //            tenga sesión activa y sea Administrador (rol = 1).
 //            Si no cumple, redirige al login.
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
     // Recupera los datos de sesión guardados por login.js

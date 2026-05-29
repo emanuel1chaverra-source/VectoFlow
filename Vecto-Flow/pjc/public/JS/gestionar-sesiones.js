@@ -9,6 +9,7 @@ let todasLasSesiones = [];
 let token = '';
 
 // ── INIT ────────────────────────────────────────────────────
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 document.addEventListener('DOMContentLoaded', () => {
     token = localStorage.getItem('token');
     if (!token) { window.location.href = '../PAGE/login.html'; return; }
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── READ — Cargar todas las sesiones ────────────────────────
-// HU-018 | RF-018
+// Trazabilidad: CU-22 | RF-018 | HU-018
 async function cargarSesiones() {
     try {
         const res = await fetch(`${API}/api/sesiones`, {
@@ -33,7 +34,9 @@ async function cargarSesiones() {
     }
 }
 
+
 // ── Cargar estudiantes para el select del modal ──────────────
+// Trazabilidad: CU-22 | RF-021 | HU-021 | RNF-08
 async function cargarEstudiantes() {
     try {
         const res = await fetch(`${API}/api/auth/usuarios/estudiantes`, {
@@ -51,7 +54,7 @@ async function cargarEstudiantes() {
 }
 
 // ── CREATE — Crear nueva sesión ──────────────────────────────
-// HU-019 | RF-019
+// Trazabilidad: CU-09 | RF-019 | HU-019 | RNF-15
 async function crearSesion() {
     const FKUsuario   = document.getElementById('selectEstudiante').value;
     const IPAcceso    = document.getElementById('inputIP').value.trim();
@@ -82,7 +85,7 @@ async function crearSesion() {
 }
 
 // ── UPDATE — Cerrar sesión manualmente ───────────────────────
-// HU-020 | RF-020
+// Trazabilidad: CU-24 | RF-020 | HU-020 | RNF-11
 async function cerrarSesionManual(id) {
     if (!confirm('¿Cerrar esta sesión?')) return;
     try {
@@ -99,6 +102,7 @@ async function cerrarSesionManual(id) {
 }
 
 // ── RENDER TABLA ─────────────────────────────────────────────
+// Trazabilidad: CU-22 | RF-021 | HU-021 | RNF-17
 function renderTabla(sesiones) {
     const tbody = document.getElementById('tablaSesiones');
     if (sesiones.length === 0) {
@@ -129,6 +133,7 @@ function renderTabla(sesiones) {
 }
 
 // ── STATS ────────────────────────────────────────────────────
+// Trazabilidad: CU-25 | RF-025 | HU-025 | RNF-23
 function actualizarStats(sesiones) {
     document.getElementById('totalSesiones').textContent    = sesiones.length;
     document.getElementById('sesionesActivas').textContent  = sesiones.filter(s => s.Estado == 1).length;
@@ -136,6 +141,7 @@ function actualizarStats(sesiones) {
 }
 
 // ── FILTRAR ──────────────────────────────────────────────────
+// Trazabilidad: CU-22 | RF-021 | HU-021 | RNF-08
 function filtrar() {
     const estado = document.getElementById('filtroEstado').value;
     const filtradas = estado === ''
@@ -145,6 +151,7 @@ function filtrar() {
 }
 
 // ── MODAL ────────────────────────────────────────────────────
+// Trazabilidad: CU-09 | RF-019 | HU-019 | RNF-11
 function abrirModal() {
     document.getElementById('msgModal').textContent   = '';
     document.getElementById('selectEstudiante').value = '';
@@ -152,12 +159,13 @@ function abrirModal() {
     document.getElementById('inputDispositivo').value = '';
     document.getElementById('modalOverlay').classList.add('activo');
 }
-
+// Trazabilidad: CU-09 | RF-019 | HU-019 | RNF-11
 function cerrarModal() {
     document.getElementById('modalOverlay').classList.remove('activo');
 }
 
 // ── HELPER FECHA ─────────────────────────────────────────────
+// Trazabilidad: CU-10 | RF-019 | HU-019 | RNF-15
 function formatFecha(f) {
     return f.toLocaleString('es-CO', {
         day: '2-digit', month: '2-digit', year: 'numeric',

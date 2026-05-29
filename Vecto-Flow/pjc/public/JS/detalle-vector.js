@@ -16,6 +16,7 @@ const nombre = sesion.nombre || sesion.usuario || 'Usuario';
 // ─────────────────────────────────────────────
 // FUNCIÓN: logout
 // Elimina la sesión del localStorage y redirige al login.
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 function logout() {
     localStorage.removeItem('sesion');
@@ -26,6 +27,7 @@ function logout() {
 // ─────────────────────────────────────────────
 // FUNCIÓN: hdrs
 // Retorna los headers con el token JWT para las peticiones fetch.
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 function hdrs() {
     return {
@@ -38,6 +40,7 @@ function hdrs() {
 // FUNCIÓN: renderNavbar
 // Rellena navbar con nombre, avatar, rol y links de navegación
 // según si el usuario es Estudiante (2) o Docente (3).
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 function renderNavbar() {
     document.getElementById('nombre-display').innerText = nombre;
@@ -74,7 +77,8 @@ function renderNavbar() {
 // FUNCIÓN: cargarEstudiantes (solo Docente)
 // Llama GET /api/auth/usuarios/estudiantes y puebla el <select>
 // con los estudiantes disponibles para filtrar.
-// ─────────────────────────────────────────────
+// Trazabilidad: CU-22 | RF-021 | HU-021 | RNF-08
+// ─────────────────────────────────────────────    
 async function cargarEstudiantes() {
     try {
         const res  = await fetch(API + '/api/auth/usuarios/estudiantes', { headers: hdrs() });
@@ -94,6 +98,7 @@ async function cargarEstudiantes() {
 // - Estudiante (rol=2): GET /api/operaciones (sus propias operaciones)
 // - Docente    (rol=3): GET /api/operaciones/estudiante/:id
 // Renderiza las cards de suma en #contenido.
+// Trazabilidad: CU-10 | RF-019 | HU-019 | RNF-06
 // ─────────────────────────────────────────────
 async function cargarHistorial() {
     const contenido = document.getElementById('contenido');
@@ -129,11 +134,11 @@ async function cargarHistorial() {
         contenido.innerHTML = `<div class="error-msg"><span>❌</span>Error al cargar los datos: ${err.message}</div>`;
     }
 }
-
 // ─────────────────────────────────────────────
 // FUNCIÓN: getDetalle
 // Llama GET /api/detalle-vector/:fkVector
 // Retorna el arreglo de elementos atómicos del vector.
+// Trazabilidad: CU-08 | RF-012 | HU-009 | RNF-06
 // ─────────────────────────────────────────────
 async function getDetalle(fkVector) {
     try {
@@ -150,6 +155,7 @@ async function getDetalle(fkVector) {
 // Construye el HTML de una card de operación con:
 //   - Chips de los vectores (A, B, C opcional, Resultado)
 //   - Tabla atómica índice por índice: A[i], B[i], C[i], Resultado[i]
+// Trazabilidad: CU-17 | RF-013 | HU-011 | RNF-17
 // ─────────────────────────────────────────────
 async function buildSumaCard(op) {
     const fecha    = new Date(op.FechaOperacion).toLocaleString('es-CO');
@@ -229,6 +235,7 @@ async function buildSumaCard(op) {
 // ─────────────────────────────────────────────
 // INIT — Se ejecuta al cargar el DOM
 // Verifica sesión, renderiza navbar y carga datos según rol.
+// Trazabilidad: CU-24 | RF-024 | HU-024 | RNF-12
 // ─────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
     // Si no hay sesión, redirigir al login
