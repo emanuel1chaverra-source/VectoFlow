@@ -36,3 +36,13 @@ específicas por tabla son:
 El Diccionario de Datos versión 2.0 (`Diccionario_de_Datos_VectoFlow_COMPLETO.docx`) 
 y el Modelo Entidad-Relación (MER) en Tercera Forma Normal (3FN), donde se pueden 
 verificar las claves foráneas, relaciones y justificación de cada campo incluido.
+
+## Decisión #02 — Uso de JWT para autenticación
+**¿Qué decidí?**
+Usar JSON Web Tokens (JWT) como mecanismo de autenticación en lugar de sesiones del lado del servidor (express-session).
+
+**¿Por qué?**
+VectoFlow es una SPA (Single Page Application) con múltiples páginas HTML estáticas que consumen una API REST. Las sesiones del servidor requieren estado compartido, lo que complica el escalado. JWT permite autenticación stateless: el token viaja en cada petición y el servidor solo lo verifica sin guardar estado.
+
+**¿Qué artefacto de diseño respalda esta decisión?**
+El Diagrama de Arquitectura del sistema (Cliente–Servidor–BD) y los Requisitos No Funcionales RNF-02 (Seguridad) y RNF-03 (Rendimiento), que exigen autenticación segura y tiempos de respuesta menores a 2 segundos.

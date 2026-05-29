@@ -1,11 +1,9 @@
 // ============================================================
 // authMiddleware.js — Middlewares de seguridad y autorización
 // Ubicación: src/middlewares/authMiddleware.js
-// Propósito: Protege rutas verificando el token JWT y validando
-//            que el usuario tenga el rol requerido (Admin).
-// Trazabilidad: HU-024 | RF-024 | RNF-12
+// Propósito: Protege rutas verificando el token JWT y validando los roles.
+// Trazabilidad: HU-024 | HU-010 | HU-005 | HU-008 | RF-024 | RF-010 | RF-005 | RF-008 | RNF-12
 // ============================================================
-
 const jwt = require('jsonwebtoken');
 
 // ─────────────────────────────────────────────
@@ -14,6 +12,7 @@ const jwt = require('jsonwebtoken');
 //            Si es válido, inyecta los datos del usuario en req.usuario
 //            para que los siguientes middlewares/controladores los usen.
 // Uso: router.get('/ruta', verificarToken, controlador)
+// Trazabilidad: HU-024 | HU-010 | HU-005 | HU-008 | RNF-12
 // ─────────────────────────────────────────────
 const verificarToken = (req, res, next) => {
     // El token llega en el header como: Authorization: Bearer <token>
@@ -41,6 +40,7 @@ const verificarToken = (req, res, next) => {
 // Propósito: Permite el acceso únicamente a usuarios con FKRol = 1
 //            (Administrador). Debe usarse después de verificarToken.
 // Uso: router.get('/ruta', verificarToken, soloAdmin, controlador)
+// Trazabilidad: HU-024 | RF-024 | RNF-12
 // ─────────────────────────────────────────────
 const soloAdmin = (req, res, next) => {
     // req.usuario fue inyectado por verificarToken
@@ -51,7 +51,7 @@ const soloAdmin = (req, res, next) => {
 };
 
 // Middleware — Solo Docentes
-// Trazabilidad: HU-010 | RF-010
+// Trazabilidad: HU-010 | RF-010 | RNF-12
 const soloDocente = (req, res, next) => {
     if (req.usuario.rol !== 3) {
         return res.status(403).json({ error: 'Acceso denegado. Solo docentes.' });
@@ -60,6 +60,7 @@ const soloDocente = (req, res, next) => {
 };
 
 // Middleware — Solo Estudiantes (FKRol = 2)
+//Trazabilidad: HU-005 | HU-008 | RF-005 | RF-008 | RNF-12
 const soloEstudiante = (req, res, next) => {
     if (req.usuario.rol !== 2){
         return res.status(403).json({ error: 'Acceso denegado. Solo estudiantes.' });
@@ -68,4 +69,3 @@ const soloEstudiante = (req, res, next) => {
 };
 
 module.exports = { verificarToken, soloAdmin, soloDocente, soloEstudiante };
-

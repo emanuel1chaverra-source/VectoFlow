@@ -7,13 +7,11 @@
 
 const db = require('../config/db');
 
-// ─────────────────────────────────────────────
-// FUNCIÓN: listarOperaciones
-// Método HTTP: GET /api/operaciones
-// Acceso: Estudiante autenticado
-// Retorna todas las operaciones del estudiante logueado
-// con JOIN a vectores y ejercicios para contexto completo.
-// ─────────────────────────────────────────────
+/* ── listarOperaciones(req, res) ───────────────────────────────
+ * Retorna todas las operaciones de suma del estudiante autenticado.
+ * Realiza JOIN con las tablas vectores y ejercicios para devolver
+ * nombres descriptivos en lugar de solo claves foráneas.
+ * Trazabilidad: CU-05 | RF-014 | HU-014 | RNF-06 */
 const listarOperaciones = async (req, res) => {
     const idEstudiante = req.usuario.id;
 
@@ -45,12 +43,12 @@ const listarOperaciones = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────
-// FUNCIÓN: crearOperacion
-// Método HTTP: POST /api/operaciones
-// Acceso: Estudiante autenticado
-// Body: { fkVectorA, fkVectorB, fkVectorC (opcional), fkEjercicio (opcional) }
-// ─────────────────────────────────────────────
+/* ── crearOperacion(req, res) ──────────────────────────────────
+ * Registra una nueva operación de suma vinculada al estudiante
+ * autenticado. Requiere fkVectorA y fkVectorB en el body;
+ * fkVectorC y fkEjercicio son opcionales y se insertan como null
+ * si no se proporcionan.
+ * Trazabilidad: CU-01 | RF-014 | HU-014 | RNF-06 */
 const crearOperacion = async (req, res) => {
     const idEstudiante = req.usuario.id;
     const { fkVectorA, fkVectorB, fkVectorC, fkEjercicio } = req.body;
@@ -74,11 +72,11 @@ const crearOperacion = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────
-// FUNCIÓN: eliminarOperacion
-// Método HTTP: DELETE /api/operaciones/:id
-// Acceso: Estudiante autenticado (solo sus propias operaciones)
-// ─────────────────────────────────────────────
+/* ── eliminarOperacion(req, res) ───────────────────────────────
+ * Elimina una operación de suma por su ID, verificando primero
+ * que pertenezca al estudiante autenticado. Si no existe o no
+ * le pertenece, retorna 404 sin ejecutar el DELETE.
+ * Trazabilidad: CU-12 | RF-014 | HU-014 | RNF-11 */
 const eliminarOperacion = async (req, res) => {
     const idEstudiante = req.usuario.id;
     const { id } = req.params;
@@ -98,12 +96,12 @@ const eliminarOperacion = async (req, res) => {
     }
 };
 
-// ─────────────────────────────────────────────
-// FUNCIÓN: listarOperacionesEstudiante
-// Método HTTP: GET /api/operaciones/estudiante/:id
-// Acceso: Docente autenticado
-// Retorna operaciones de un estudiante específico (para vista Docente)
-// ─────────────────────────────────────────────
+/* ── listarOperacionesEstudiante(req, res) ─────────────────────
+ * Retorna todas las operaciones de un estudiante específico
+ * identificado por su ID en los parámetros de ruta. Exclusivo
+ * para docentes autenticados; usa la misma consulta JOIN que
+ * listarOperaciones pero sin filtrar por sesión activa.
+ * Trazabilidad: CU-09 | RF-014 | HU-014 | RNF-06 */
 const listarOperacionesEstudiante = async (req, res) => {
     const { id } = req.params;
 

@@ -1,7 +1,7 @@
 // ============================================================
 // vectoresController.js — Lógica para guardar suma de vectores
 // Ubicación: src/controllers/vectoresController.js
-// Trazabilidad: HU-005 | RF-005 | RNF-08
+// Trazabilidad: HU-005 | HU-008 | RF-005 | RNF-08
 // ============================================================
 
 const db = require('../config/db');
@@ -9,7 +9,9 @@ const db = require('../config/db');
 /* ── guardarSuma ────
  * Recibe los vectores de entrada y el resultado desde el frontend,
  * los guarda en: dimension, vectores, detalle_vector y operaciones_suma.
- * Usa transacción para garantizar integridad: todo o nada. */
+ * Usa transacción para garantizar integridad: todo o nada.
+ * Trazabilidad código: HU-005 | HU-008 | RF-005
+ */
 const guardarSuma = async (req, res) => {
     const { vectores, resultado, dim } = req.body;
     const FKEstudiante = req.usuario.id; // Viene del token JWT
