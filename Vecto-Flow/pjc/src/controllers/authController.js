@@ -27,11 +27,22 @@ const registrar = async (req, res) => {
     // Extrae los campos del cuerpo de la petición HTTP
     const { nombre, apellido, correo, contraseña, fkRol } = req.body;
 
+    // Validaciones de entrada (BUG-01)
+    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo || '');
+    if (!nombre?.trim() || !apellido?.trim() || !contraseña || !correoValido) {
+        return res.status(400).json({ error: 'Nombre, apellido, correo válido y contraseña son obligatorios' });
+    }
+
+    // RN-08: el auto-registro solo permite Estudiante (2) y Docente (3) (BUG-03)
+    if (![2, 3].includes(Number(fkRol))) {
+        return res.status(403).json({ error: 'Rol no permitido en el auto-registro' });
+    }
+
     try {
         // Verifica si ya existe un usuario con ese correo en la tabla USUARIOS
         // Previene registros duplicados
         const [existe] = await db.query('SELECT * FROM USUARIOS WHERE Correo = ?', [correo]);
-        if (existe.length > 0) return res.status(400).json({ error: 'El correo ya está registrado' });
+        if (existe.length > 0) return res.status(409).json({ error: 'El correo ya está registrado' }); // BUG-02
 
         // Cifra la contraseña con bcrypt usando 10 rondas de salt
         // El resultado es un hash irreversible que se guarda en la BD
